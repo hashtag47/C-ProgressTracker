@@ -1,7 +1,8 @@
 # C#-ProgressTracker
+
 > [!CAUTION]
 >
-> Following the C# Player's Guide of RB
+> Following the **C# Player's Guide of RB**, With the **Solutions Appended**
 
 ## PART 1: Basics
 
@@ -123,4 +124,703 @@ using System;
 
 #### **• Variables**
 
-​	
+​	Variables are **containers** for data. Before using a variable, we must indicate that we need one. This is called **declaring the variable.**
+
+
+
+#### **• Reading Text from the Console**
+
+​	Console has a **ReadLine** method that retrieves text that a person types until they hit the **Enter key.**
+
+```c#
+string name;
+Console.WriteLine("What is your name?");
+name = Console.ReadLine();
+Console.WriteLine("Hi " + name);
+```
+
+> [!TIP]
+>
+> **Challenge: Consolas and Telim**
+
+```c#
+Console.WriteLine("Bread is ready,");
+Console.WriteLine("Who is the bread for?"); 
+string recceiver = Console.ReadLine();
+Console.WriteLine("Noted: " +  recceiver + " got bread.");
+```
+
+
+
+#### **• COMPILER ERRORS, DEBUGGERS, AND CONFIGURATIONS**
+
+​	**(1) Compiler Errors and Warnings**
+
+​		For example, when we do something like string name = Console.ReadLine();, you may have noticed that you get a warning that states, “**Converting null literal or possible null value to a non-nullable type.**”
+
+​	**(2) Debugging**
+
+​		Trying to figure out why a program does not do what you expected and then **adjusting** it is called debugging.
+
+​	**(3) Build Configurations**
+
+​		In the C# world, configuration data is organized into **different build configurations**. Each configuration provides different information to the compiler about **how to build things**. There are **two configurations** defined by default, the **Debug** configuration and the **Release** configuration.
+
+​	The main difference is that the **Release configuration** has **optimizations** turned on which allow the compiler to make certain adjustments so that your code can **run faster without changing what it does**. For example, if you declare a variable and never use it, optimized code will strip it out. **Unoptimized code will leave it in**. The **Debug configuration has this turned off**. When debugging your code, these optimizations can make it harder to hunt down problems. **As you are building your program, it is usually better to run with the Debug configuration**. When you’re ready to share your program with others, you compile it with the Release configuration instead.
+
+
+
+------
+
+### Variables
+
+​	A variable is a named location in memory for storing data.
+
+#### **• What is a variable?**
+
+​	When we talk about memory and variables, we are talking about “**volatile**” memory (or **RAM**) that sticks around while your program runs but is wiped out when your program closes or the computer is rebooted.
+
+​	Each memory location has a **unique numeric memory address**, which can be used to access any specific location’s contents.
+
+​	The first step in using a variable is to **declare** it. Declaring a variable allows the computer to reserve a spot for it in **memory** of the appropriate size.
+
+
+
+#### **• CREATING AND USING VARIABLES IN C#**	
+
+```c#
+string username; // Declaring a variable
+
+username = Console.ReadLine(); // Assigning a value to a variable
+
+Console.WriteLine("Hi " + username); // Retrieving its current value
+```
+
+
+
+#### **• INTEGERS**
+
+```c#
+int a, b, c;
+a = b = c = 10;
+c = 10; // The same to uppers
+b = c;
+a = b;
+```
+
+​	Two **convention**s among C# programmers are **camelCase** (or lowerCamelCase) and **PascalCase** (or UpperCamelCase), which are illustrated by the way their names are written. Most C# programmers use **lowerCamelCase** for **variables** and **UpperCamelCase** for other things.
+
+
+
+------
+
+### **THE C# TYPE SYSTEM**
+
+​	Types of variables and values matter in C#. They are not interchangeable.
+
+​	There are **eight integer types** for storing integers of differing sizes and ranges: **int**, **short**, **long**, **byte**, **sbyte**, **uint**, **ushort**, and **ulong**. These **eight types** are called **integer types** or **integral types**.
+
+​	There are **three** types for storing **real numbers**: **float**, **double**, and **decimal**.
+
+​	Using **var** for a variable’s type tells the compiler to **infer its type** from the surrounding code, so you do not have to type it out. (But it still has a specific type.)
+
+​	The **Convert** class helps convert one type to another.
+
+​	The **int type** uses **4 bytes** and can represent numbers between roughly **-2 billion** and **+2 billion**. 
+
+​	The **short type** uses **2 bytes** and can represent numbers between about **-32,000**
+
+and **+32,000**.
+
+​	The **long type** uses **8 bytes** and can represent numbers between about **-9 quintillion** and **+9 quintillion** (a quintillion is a billion billion).
+
+​	Thus **ushort**’s range is 0 to about 65,000, **uint**’s range is 0 to about 4 billion, and **ulong**’s range is 0 to about 18 quintillion.
+
+​	The **char** type uses two bytes to allow for **65,536** distinct characters. The number assigned to each character follows a widely used standard called **Unicode**.
+
+​	If you know the **hexadecimal Unicode** number for a symbol and would prefer to use that, you can write that out after a **\u**:
+
+```c#
+char aLetter = '\u0061'; // An 'a'
+```
+
+​	The **float** type uses **4 bytes**, while **double** uses twice that many (hence the “double”) at **8 bytes**. The **decimal** type uses **16 bytes**.
+
+```c#
+double number1 = 3.5623;
+float number2 = 3.5623F;
+decimal number3 = 3.5623M;
+double avogadrosNumber = 6.022e23;
+```
+
+
+
+#### **• TYPE INFERENCE**
+
+```c#
+var message = "Hello, World!";
+```
+
+This only works if you **initialize the variable on the same line** it is declared. Otherwise, there is not enough information for the compiler to infer its type. This won’t work:
+
+```c#
+var x; // DOES NOT COMPILE!
+```
+
+
+
+#### **• THE CONVERT CLASS AND THE PARSE METHODS**
+
+​	The **Convert** class is like the **Console** class—a thing in the system that provides you with a set of tasks or capabilities that it can perform.
+
+```c#
+Console.Write("What is your favorite number?");
+string favoriteNumberText = Console.ReadLine();
+int favoriteNumber = Convert.ToInt32(favoriteNumberText);
+Console.Write(favoriteNumber + " is a great number!");
+```
+
+![image-20251209165531826](/Users/adminkino/Library/Application Support/typora-user-images/image-20251209165531826.png)
+
+Many of these types have a **Parse method** to convert a string to the type. For example:
+
+```c#
+int number = int.Parse("9000");
+```
+
+<img src="/Users/adminkino/Library/Application Support/typora-user-images/image-20251209170230886.png" style="transform: rotate(90deg); zoom:35%;">
+
+------
+
+### MATH
+
+#### **• SPECIAL NUMBER VALUES**
+
+​	All 11 define a **MinValue** and a **MaxValue**:
+
+```c#
+int aBigNumber = int.MaxValue;
+short aBigNegativeNumber = short.MinValue;
+```
+
+​	The **double** and **float** types (but **not decimal**) also define a value for positive and negative infinity called **PositiveInfinity** and **NegativeInfinity**:	
+
+```c#
+double infinity = double.PositiveInfinity; // ∞
+```
+
+​	**double** and **float** also define a weird value called **NaN**, or “not a number.”
+
+```c#
+double notAnyRealNumber = double.NaN;
+```
+
+
+
+#### **• OVERFLOW AND ROUNDOFF ERROR**
+
+```c#
+float a = 10000;
+float b = 0.00001f;
+float sum = a + b;
+```
+
+​	The result is rounded to 10000, and sum will still be 10000 after the addition. Roundoff error is not usually a big deal, but occasionally, the lost digits accumulate, like when adding huge piles of tiny numbers. You can sometimes sidestep this by using a more precise type. For example, neither double nor decimal have trouble with this specific situation. **But all three have it eventually, just at different scales.**
+
+
+
+#### **• THE MATH AND MATHF CLASSES**
+
+​	**π** and **e**: **Math.E** and **Math.PI**
+
+​	the **Pow** and the **Sqrt**, the **Abs**, **Sin**, **Cos**, and **Tan**
+
+​	**Min**, **Max**, and **Clamp**
+
+> [!NOTE]
+>
+> **Clamp** allows you to **provide a value and a range**. If the value is within the range, that value is returned. If that value is lower than the range, it produces the low end of the range. If that value is higher than the range, it produces the high end of the range.
+
+```c#
+double x = 3.0;
+double xSquared = Math.Pow(x, 2);
+double y = Math.Sqrt(xSquared);
+int x = Math.Abs(-2); // Will be 2.
+double y1 = Math.Sin(0);
+double y2 = Math.Cos(0);
+int smaller = Math.Min(2, 10);
+int larger = Math.Max(2, 10);
+int health;
+health += 10;
+health = Math.Clamp(health, 0, 100); // Keep it in the interval 0 to 100.
+```
+
+​	**MathF** uses **floats** instead of doubles.
+
+```c#
+float x = 3;
+float xSquared = MathF.Pow(x, 2);
+```
+
+
+
+------
+
+### **CONSOLE 2.0**
+
+​	An **@** before a string **ignores** any would-be **escape sequences**: @"C:\Users\Me\File.txt". (**verbatim string literal**)
+
+​	A **$** before a string means **curly braces contain code**: "a:{a} sum:{a+b}".
+
+
+
+#### **• The Write Method**
+
+```c#
+Console.Write("What is your name, human? "); // Notice the space at the end.
+string userName = Console.ReadLine();
+```
+
+
+
+#### **• The ReadKey Method**
+
+​	The **Console.ReadKey** method waits for only **a single keypress**. 
+
+```c#
+Console.WriteLine("Press any key when you're ready to begin.");
+Console.ReadKey();
+```
+
+**One version**, shown above, **has no inputs**. The other version has an input whose type is **bool**, which indicates whether the text should be “**intercepted**” or not. (Not display on console)
+
+```c#
+Console.WriteLine("Press any key when you're ready to begin.");
+Console.ReadKey(true);
+```
+
+
+
+#### **• Changing Colors**
+
+The **Console** class provides variables that store the colors it uses for displaying text.
+
+```c#
+Console.BackgroundColor = ConsoleColor.Yellow;
+Console.ForegroundColor = ConsoleColor.Black;
+```
+
+**ConsoleColor** is an enumeration, **Yellow** and **Black** are the names of two items in the **ConsoleColor collection**. **Console’s Clear** method to wipe out all text on the screen and change the entire background to the newly set background color:
+
+```c#
+Console.Clear();
+```
+
+
+
+#### **• Changing the Window Title**
+
+​	**Console** also has a **Title** variable, which will change the text displayed in the console window's title bar.
+
+```c#
+Console.Title = "Hello, World!";
+```
+
+
+
+#### **• The Beep Method**
+
+​	The Console class can even **beep**!
+
+```c#
+Console.Beep();
+Console.Beep(440, 1000); //choose both frequency and duration
+```
+
+
+
+#### **• Escape Sequences**
+
+```c#
+Console.WriteLine("""); // ERROR: Bad quotation marks!
+Console.WriteLine("\"");
+Console.WriteLine("C:\\Users\\RB\\Desktop\\MyFile.txt");
+// C:\Users\RB\Desktop\MyFile.txt
+Console.WriteLine(@"C:\Users\RB\Desktop\MyFile.txt"); // verbatim string literal
+```
+
+
+
+#### **• String Interpolation**
+
+```c#
+Console.WriteLine($"My favorite number is {myFavoriteNumber}.");
+```
+
+​	You can combine **string interpolation** and **verbatim strings** by using **$** and **@** in either order.
+
+
+
+#### • Alignment and formatting
+
+​	**Alignment** lets you display a string with a specific preferred width.
+
+​	Alignment is useful if you structure text in a table and need things to **line up horizontally**.
+
+```c#
+string name1 = Console.ReadLine();
+string name2 = Console.ReadLine();
+Console.WriteLine($"#1: {name1,20}");
+Console.WriteLine($"#2: {name2,20}");
+```
+
+​	If you want the whitespace to be **after the word**, use a **negative number**:
+
+```c#
+Console.WriteLine($"{name1,-20} - 1");
+Console.WriteLine($"{name2,-20} - 2");
+```
+
+```c#
+Console.WriteLine($"{Math.PI:0.000}"); // It even rounds!
+```
+
+​	Using a format string of **000.000** with the number 42 will display **042.000**
+
+​	In **contrast**, a **#** will leave a place for a digit but will not display a non-significant 0 (a leading or trailing 0):
+
+```c#
+Console.WriteLine($"{42:#.##}");// Displays "42"
+Console.WriteLine($"{42.1234:#.##}");// Displays "42.12"
+```
+
+​	You can also use the **%** symbol to make a number be represented as **a percent** instead of a fractional value. 
+
+```c#
+float currentHealth = 4;
+float maxHealth = 9;
+Console.WriteLine($"{currentHealth/maxHealth:0.0%}"); // Displays "44.4%"
+```
+
+​	Several shortcut formats exist. For example, using just a **simple P** for the format is equivalent to **0.00%**, and **P1** is equal to **0.0%**. Similarly, a format string of **F** is the same as **0.00**, while **F5** is the same as **0.00000**.
+
+> [!TIP]
+>
+> **Challenge: The Defense of Consolas**
+>
+> ```c#
+> Console.Write("Target Row? ");
+> int row = Convert.ToInt32(Console.ReadLine());
+> Console.Write("Target Column? ");
+> int col = Convert.ToInt32(Console.ReadLine());
+> Console.BackgroundColor = ConsoleColor.Yellow;
+> Console.ForegroundColor = ConsoleColor.Black;
+> Console.Title = "Defense of Consolas";
+> Console.WriteLine("Deploy to:");
+> Console.WriteLine($"({row}, {col - 1})");
+> Console.WriteLine($"({row-1}, {col})");
+> Console.WriteLine($"({row}, {col + 1})");
+> Console.WriteLine($"({row+1}, {col})");
+> Console.Beep();
+> Console.ResetColor();
+> ```
+
+
+
+------
+
+### **DECISION MAKING**
+
+> [!TIP]
+>
+> ##### Challenge: Repairing the Clocktower
+>
+> ```C#
+> int Number = Convert.ToInt32(Console.ReadLine());
+> if (Number % 2 == 0)
+> {
+>     Console.WriteLine("Tick");
+> }
+> else
+> {
+>     Console.WriteLine("Tock");
+> }
+> ```
+>
+> **Challenge: Watchtower**
+>
+> ```c#
+> int XPos = Convert.ToInt32(Console.ReadLine());
+> int YPos = Convert.ToInt32(Console.ReadLine());
+> if (XPos == 0 && YPos == 0)
+> {
+>     Console.WriteLine("The enemy is here!");
+> } else if (XPos == 0 && YPos > 0)
+> {
+>     Console.WriteLine("The enemy is to the north!");
+> } else if (XPos == 0 && YPos < 0)
+> {
+>     Console.WriteLine("The enemy is to the south!");
+> } else if (YPos == 0 && XPos > 0)
+> {
+>     Console.WriteLine("The enemy is to the east!");
+> } else if (YPos == 0 && XPos < 0)
+> {
+>     Console.WriteLine("The enemy is to the west!");
+> } else if (XPos < 0 && YPos > 0)
+> {
+>     Console.WriteLine("The enemy is to the north-west!");
+> }else if (XPos > 0 && YPos > 0)
+> {
+>     Console.WriteLine("The enemy is to the north-east!");
+>     
+> } else if (XPos < 0 && YPos < 0)
+> {
+>     Console.WriteLine("The enemy is to the south-west!");
+> }
+> else
+> {
+>     Console.WriteLine("The enemy is to the south-east!");
+> }
+> ```
+>
+> 
+
+
+
+------
+
+### SWITCHES
+
+​	The **statement form**: switch (number) { case 0: DoStuff(); break; case 1: DoStuff(); break; default: DoStuff(); break; }
+
+​	The **expression form**: number switch { 0 => "zero", 1 => "one", _ => "other" }
+
+#### **• SWITCH STATEMENTS**
+
+```c#
+switch (choice)
+{
+	case 1:
+		Console.WriteLine("Ye rest and recover your health.");
+		break;
+	case 2:
+		Console.WriteLine("Raiding the port town get ye 50 gold doubloons.");
+		break;
+	case 3:
+		Console.WriteLine("The wind is at your back; the open horizon ahead.");
+		break;
+	case 4:
+		Console.WriteLine("'Tis but a baby Kraken, but still eats toy boats.");
+		break;
+	default:
+		Console.WriteLine("Apologies. I do not know that one.");
+		break;
+}
+```
+
+
+
+#### • SWITCH EXPRESSIONS
+
+```C#
+string response;
+response = choice switch
+{
+		1 => "Ye rest and recover your health.",
+		2 => "Raiding the port town get ye 50 gold doubloons.",
+		3 => "The wind is at your back; the open horizon ahead.",
+		4 => "'Tis but a baby Kraken, but still eats toy boats.",
+		_ => "Apologies. I do not know that one." // wildcard
+};
+Console.WriteLine(response);
+```
+
+​	For starters, in a **switch expression**, the switch’s target **comes before the switch** **keyword** instead of after.
+
+
+
+#### **• SWITCHES AS A BASIS FOR PATTERN MATCHING**
+
+> [!TIP]
+>
+> **Challenge: Buying Inventory**
+>
+> ```c#
+> Console.Write("What number do you want to see the price of?");
+> int choice = Convert.ToInt32(Console.ReadLine());
+> string response = choice switch
+> {
+>     1 => "Rope cost 10 golds",
+>     2 => "Torches cost 16 golds",
+>     3 => "Climbing Equipment costs 24 golds",
+>     4 => "Clean Water costs 2 golds",
+>     5 => "Machete costs 20 golds",
+>     6 => "Canoe costs 200 golds",
+>     7 => "Food Supplies cost 2 golds",
+>     _ => "We don't sell that thing here.."
+> };
+> Console.WriteLine(response);
+> ```
+
+> [!TIP]
+>
+> **Challenge: Discounted Inventory**
+>
+> ```c#
+> string[] ItemList = new string[]
+> {
+>     "Rope",
+>     "Torches",
+>     "Climbing Equipment",
+>     "Clean Water",
+>     "Machete",
+>     "Machete",
+>     "Food Supplies"
+> };
+> int[] ItemCosts = new int[]
+> {
+>     10,
+>     16,
+>     24,
+>     2,
+>     20,
+>     200,
+>     2
+> };
+> Console.Write("What number do you want to see the price of?");
+> int choice = Convert.ToInt32(Console.ReadLine().Trim());
+> Console.Write("Sorry, what is your name again?");
+> string name = Console.ReadLine().Trim();
+> if (name == "RB")
+> {
+>     Console.WriteLine($"{ItemList[choice - 1]} cost {(ItemCosts[choice - 1]) / 2} golds");
+> }
+> else
+> {
+>     Console.WriteLine($"{ItemList[choice - 1]} cost {ItemCosts[choice - 1]} golds");
+> }
+> 
+> ```
+
+
+
+------
+
+### LOOPING
+
+​	**while** loop: while (condition) { ... }
+
+​	**do/while** loop: do { ... } while (condition);
+
+​	**for** loop: for (initialization; condition; update) { ... }
+
+​	**break** exits the loop. **continue** immediately jumps to the next iteration of the loop.
+
+> [!TIP]
+>
+> **Challenge:  The Prototype**
+>
+> ```c#
+> Console.Write("User 1, enter a number between 0 and 100: ");
+> int GuessNumber = Convert.ToInt32(Console.ReadLine());
+> // int GuessNumber2 = int.Parse(Console.ReadLine());
+> Console.WriteLine("User 2, guess the number.");
+> while (true)
+> {
+>     Console.Write("What is your next guess? ");
+>     int GuessedNumber = Convert.ToInt32(Console.ReadLine());
+>     if (GuessedNumber == GuessNumber)
+>     {
+>         Console.Clear();
+>         Console.WriteLine("Your guessed the number!");
+>         break;
+>     } else if (GuessedNumber > GuessNumber)
+>     {
+>         Console.WriteLine($"{GuessedNumber} is too high");
+>     }
+>     else
+>     {
+>         Console.WriteLine($"{GuessedNumber} is too low");
+>     }
+> }
+> 
+> ```
+>
+> **Challenge: The Magic Cannon**
+>
+> ```C#
+> for (int initial = 1; initial <= 100; initial++)
+> {
+>     if ((initial % 3 == 0) && (initial % 5 == 0))
+>     {
+>         Console.BackgroundColor = ConsoleColor.Blue;
+>         Console.WriteLine($"{initial}: Electric and Fire");
+>         Console.ResetColor(); 
+>     } else if (initial % 3 == 0) // Fire gem activates
+>     {
+>         Console.BackgroundColor = ConsoleColor.Red;
+>         Console.WriteLine($"{initial}: Fire");
+>         Console.ResetColor(); 
+>     } else if (initial % 5 == 0) // Electric blast
+>     {   
+>         Console.BackgroundColor = ConsoleColor.Yellow;
+>         Console.WriteLine($"{initial}: Electric"); 
+>         Console.ResetColor(); 
+>     }
+>     else
+>     {
+>         Console.WriteLine($"{initial}: Normal");
+>     }
+> }
+> Console.ResetColor();
+> ```
+
+
+
+------
+
+### **ARRAYS**
+
+​	**Indexing from end**: int last = scores[^1];
+
+[^n]: Index from the end
+
+​	**Getting a range**: int[] someScores = scores[1..3];
+
+​	**1..3 will grab the elements at indexes 0, 1, and 2, but not at 3.**
+
+​	**scores[2..]** creates a copy of the entire array except the first two.
+
+​	Lots of ways to **create arrays**: **new int[3], new int[] { 1, 2, 3 }, new [] { 1, 2, 3 }**
+
+​	**Multi-dimensional arrays**: int[**,**] grid = new int[3, 3];
+
+```c#
+int[] scores = new int[10] { 100, 95, 92, 87, 55, 50, 48, 40, 35, 10 };
+// Ignore the size
+int[] scores = new int[] { 100, 95, 92, 87, 55, 50, 48, 40, 35, 10 }; 
+int[] scores = new [] { 100, 95, 92, 87, 55, 50, 48, 40, 35, 10 };
+```
+
+> [!TIP]
+>
+> **Challenge: The Replicator of D’To**
+>
+> ```c#
+> int[] Array = new int[5];
+> for (int i = 0; i < Array.Length; i++)
+> {
+>     Array[i] = int.Parse(Console.ReadLine());
+> }
+> int[] CopyArray = new int[Array.Length];
+> for (int i = 0; i < CopyArray.Length; i++)
+> {
+>     CopyArray[i] = Array[i];
+>     Console.WriteLine(CopyArray[i]);
+>     Console.WriteLine(Array[i]);
+> }
+> ```
+
+
+
