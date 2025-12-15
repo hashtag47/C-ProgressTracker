@@ -824,3 +824,326 @@ int[] scores = new [] { 100, 95, 92, 87, 55, 50, 48, 40, 35, 10 };
 
 
 
+#### **• THE FOREACH LOOP**
+
+```c#
+int[] scores = new int[10];
+foreach (int score in scores)
+Console.WriteLine(score);
+```
+
+​	A **foreach** loop is typically easier to read than its for counterpart, but a **foreach loop also runs slightly slower than a for loop**. If **performance becomes a problem**, you might rewrite a problematic foreach loop as a for loop to speed it up.
+
+> [!TIP]
+>
+> **Challenge: The Laws of Freach**
+>
+> ```c#
+> int[] array = new int[] { 4, 51, -7, 13, -99, 15, -8, 45, 90 };
+> int total = 0;
+> foreach(int i in array)
+>     total += i;
+> float average = (float)total / array.Length;
+> Console.WriteLine(average);
+> ```
+
+
+
+#### **• MULTI-DIMENSIONAL ARRAYS**
+
+```c#
+int[][] matrix = new int[3][];
+matrix[0] = new int[] { 1, 2 };
+matrix[1] = new int[] { 3, 4 };
+matrix[2] = new int[] { 5, 6 };
+Console.WriteLine(matrix[0][1]); // Should be 2.
+```
+
+```c#
+int[,] matrix = new int[3, 2] { { 1, 2 }, { 3, 4 }, { 5, 6 } };
+Console.WriteLine(matrix[0, 1]);
+```
+
+​	Arrays of this nature are called **multi- dimensional arrays** or **rectangular arrays**. **Multi-dimensional arrays** can have as many dimensions as you need (for example, bool[,,]), and you can have multi-dimensional arrays of regular arrays or regular arrays of multi-dimensional arrays (int[,][], float[][,,,], etc.). These get tough to understand very quickly, so proceed with caution.
+
+​	To loop through all elements in a **multi-dimensional array**, you will probably want to use the **GetLength** method
+
+```c#
+int[,] matrix = new int[4,4];
+for (int row = 0; row < matrix.GetLength(0); row++)
+{
+	for (int column = 0; column < matrix.GetLength(1); column++)
+		Console.Write(matrix[row, column] + " ");
+	Console.WriteLine();
+}
+```
+
+
+
+------
+
+### **METHODS**
+
+​	Methods can produce a result with a **return value**: int GetNumber() { return 2; }
+
+​	**Two methods** can have the same name (an **overload**) if their parameters are different.
+
+​	Some simple methods can be defined with **an expression body**: int GetNumber() => 2;
+
+​	<img src="/Users/adminkino/Library/Application Support/typora-user-images/image-20251211134954044.png" alt="image-20251211134954044" style="zoom:25%;" />
+
+​	For example, **WriteLine** lives in **Console**, and **Main** lives in **Program**. This code map shows that methods can also be defined inside other methods.
+
+​	C# programmers often use the words method and function synonymously. But there are some subtle differences. Formally, **any reusable, callable code block is a function**. **A function is also a method if it is a member of a class.** So technically, Main is a method, but CountToTen is not. Functions that are defined inside of other functions are known as local functions.
+
+
+
+#### **• SIMPLE METHODS WITH EXPRESSIONS**
+
+```C#
+int DoubleAndAddOne(int value)
+{
+	return value * 2 + 1;
+}
+```
+
+```C#
+int DoubleAndAddOne(int value) => value * 2 + 1;
+```
+
+​	The **=>** is used to indicate that **an expression is coming next**. We saw it with switch expression.
+
+
+
+#### **• XML DOCUMENTATION COMMENTS**
+
+​	The simplest way to start using XML Documentation Comments is to go to the line immediately before a method and type three forward slashes: **///**.
+
+```C#
+/// <summary>
+/// Counts to the given number, starting at 1 and including the number provided.
+/// </summary>
+void Count(int numberToCountTo)
+{
+for (int index = 1; index <= numberToCountTo; index++)
+Console.WriteLine(index);
+}
+```
+
+> [!TIP]
+>
+> **Challenge: Taking a Number**
+>
+> ```c#
+> int AskForNumber(string text)
+> {
+>     Console.WriteLine(text);
+>     int number = int.Parse(Console.ReadLine());
+>     return number;
+> }
+> 
+> int AskForNumberInRange(string text, int min, int max)
+> {
+>     while (true)
+>     {
+>         Console.WriteLine(text);
+>         int number = Convert.ToInt32(Console.ReadLine());
+>         if (number >= min && number <= max)
+>         {
+>             return number;
+>         }
+>         else
+>         {
+>             Console.WriteLine("Please enter a number between {0} and {1}.", min, max);
+>         }
+>     }
+>     
+> }
+> 
+> AskForNumber("Which number is your preference?");
+> AskForNumberInRange("From 0 to 100, which number is your favorite?", 0, 100);
+> ```
+
+> [!TIP]
+>
+> **Challenge: Countdown**
+>
+> ```c#
+> int CountDownNumber(int number)
+> {
+>     if (number == 1) return 1;
+>     Console.WriteLine(number);
+>     return CountDownNumber(number - 1);
+> }
+> 
+> Console.WriteLine(CountDownNumber(10));
+> ```
+
+
+
+------
+
+### **MEMORY MANAGEMENT**
+
+ 	**Value semantics** means two things are equal if their data elements are equal. **Reference semantics** means two things are equal if they’re the same location in memory.
+
+
+
+####  **• MEMORY AND MEMORY MANAGEMENT**
+
+​	Modern computers have vast quantities of memory available, but it is not unlimited. Using memory is fine, but you need to clean up after yourself when you finish using it.
+
+​	But two models are almost universal: the **stack** and the **heap**. C#, like many other languages, uses both.
+
+​	
+
+#### **• THE STACK**
+
+​	All stack memory is either reserved for a method we will eventually return to, or it is available for use. As methods are called, the line advances and space is reserved for it. As methods return, the line retreats, leaving the memory available for reuse.
+
+
+
+####  **• THE HEAP**
+
+​	When we need memory that can be created in **arbitrary sizes**, we ditch the stack and find another spot.
+
+​	The heap is not as structured as the stack. It is a random assortment of various allocated data with no rigid organizational patterns, hence the name.
+
+​	 **To keep track of items placed on the heap, we capture a reference to the new object when we create it.**
+
+
+
+#### **• The Heap as a Graph of Objects**
+
+​	You can think of the heap as a set of objects interconnected by references like a web—what mathematicians would call a **directed graph**.
+
+
+
+#### **• Value Types and Reference Types**
+
+​	The first category is **value types**. Variables whose types are value types contain their data right there, in place. **They have a known, fixed size**.
+
+​	The second category is **reference types**. Variables whose types are reference types hold only a reference to the data, and the data is placed somewhere on the heap. **Two pieces of the same type of data are not guaranteed to have the same size in memory, though the references themselves are all the same size.**
+
+​	This single difference has far-reaching consequences, so it is essential to know what category any given type is in. **This is also a way that C# differs from similar languages.** C++ and Java, the two most similar programming languages to C#, handle memory quite differently.
+
+
+
+#### **• Value Semantics and Reference Semantics**
+
+​	When two things are equal because their values are equal, they have value semantics. **Value types have value semantics**.
+
+```C#
+int a = 88;
+int b = 88;
+bool areEqual = (a == b); // Will be true
+```
+
+​	When two things are equal only if they are the same reference, they have **reference semantics**.
+
+```c#
+int[] a = new int[] { 1, 2, 3 };
+int[] b = new int[] { 1, 2, 3 };
+bool areEqual = (a == b); // Will be false!
+```
+
+
+
+#### **• CLEANING UP HEAP MEMORY**
+
+​	If our program uses memory and fails to clean it up, it cannot be reused by something else. The memory is unused as it stands but cannot be put back into useful service either. **This is called a memory leak**.
+
+​	Additionally, **if we return memory to the heap too early**, some part of our program is still using it for what it once was. For a time, the rest of the system may just see it as unused memory, and the consequences aren’t high. But eventually, the heap will reuse that section of memory for a second item, and two parts of our program will be using the same memory for two different things. This is called a **dangling reference** or a **dangling pointer**. Part of your program unknowingly uses memory that was already given back to the heap.
+
+
+
+#### **• Automatic Memory Management**
+
+​	Within the **.NET runtime**, an element called the **garbage collector** (sometimes abbreviated to the GC) periodically wakes up and scans the system for anything the program can no longer reach.
+
+​	The garbage collector works well for the heap but does nothing for the stack. But the **stack was managing its memory just fine on its own**.
+
+> [!TIP]
+>
+> **Boss Battle: Hunting the Manticore**
+>
+> ```c#
+> int CityLife = 15, CityRest = 15;
+> int ManticoreLife = 10, ManticoreRest = 10;
+> int ManticoreDistance;
+> int Round = 1;
+> while (true)
+> {
+>     Console.Write("Player 1, how far away from the city do you want to station the Manticore? ");
+>     ManticoreDistance = int.Parse(Console.ReadLine());
+>     if (ManticoreDistance < 1 || ManticoreDistance > 100)
+>     {
+>         Console.WriteLine("You are too far away to Consolas");
+>     }
+>     else
+>     {
+>         break;
+>     }
+> }
+> 
+> while (true)
+> {
+>     Console.WriteLine("Player 2, it is your turn");
+>     CurrentStatus();
+>     if (CityRest <= 0)
+>     {
+>         Console.WriteLine("The Consolas failed...");
+>         return;
+>     }
+> 
+>     if (ManticoreRest <= 0)
+>     {
+>         Console.WriteLine("The Manticore has been destroyed! The city of Consolas has been saved!");
+>         return;
+>     }
+> }
+> void CurrentStatus()
+> {
+>     Console.Write($"""
+>                    ------------------------------------
+>                    STATUS: Round: {Round}  City: {CityRest}/{CityLife}  Manticore: {ManticoreRest}/{ManticoreLife}
+>                    The cannon is expected to deal 1 damage this round.
+>                    Enter desired cannon range: 
+>                    """);
+>     int desireAttack =  int.Parse(Console.ReadLine());
+>     if (desireAttack < ManticoreDistance)
+>     {
+>         Console.WriteLine("That round FELL SHORT of the target.");
+>         CityRest--;
+>     } else if (desireAttack > ManticoreDistance)
+>     {
+>         Console.WriteLine("That round OVERSHOT the target.");
+>         CityRest--;
+>     }
+>     else
+>     {
+>         Console.WriteLine("That round was a DIRECT HIT!");
+>         if (Round % 3 == 0 && Round % 5 == 0)
+>         {
+>             ManticoreRest -= 10;
+>         } else if (Round % 3 == 0 || Round % 5 == 0)
+>         {
+>             ManticoreRest -= 3;
+>         }
+>         else
+>         {
+>             ManticoreRest--;
+>         }
+> 
+>         CityRest--;
+>     }
+> 
+>     Round++;
+> }
+> ```
+
+
+
+------
+
+## **PART 2: Object-Oriented Programming**
