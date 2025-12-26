@@ -1147,3 +1147,534 @@ bool areEqual = (a == b); // Will be false!
 ------
 
 ## **PART 2: Object-Oriented Programming**
+
+### **OBJECT-ORIENTED CONCEPTS**
+
+​	Each object has a single responsibility (or perhaps a set of closely related responsibilities), and the objects work together to solve the overall problem.
+
+​	In C#, **every object belongs to a specific class or type**. An object’s class determines the object’s “shape.” All objects of the same class have the **same data elements and methods**. You can think of **classes as categories**; everything in a class is similar in nature and structure.
+
+​	**Use the right type for everything you create. If the right type doesn’t exist, create it first.**
+
+
+
+------
+
+### **ENUMERATIONS**
+
+#### **• ENUMERATION BASICS**
+
+​	An **enumeration** or an **enumerated type** is a type whose choices are one of a small list of possible options. The verb enumerate means “**to list off things, one by one**,” hence the name. ( when you can make an **exhaustive list**, not leaving anything out)
+
+​	 They derive from `System.Enum`, which derives from `System.ValueType`, so Enumerations are **value types**.
+
+
+
+#### **• Defining an Enumeration**
+
+```c#
+enum Season { Winter, Spring, Summer, Fall }
+```
+
+<img src="/Users/adminkino/Library/Application Support/typora-user-images/image-20251216221633542.png" alt="image-20251216221633542" style="zoom:25%;" />
+
+
+
+#### **• Using an Enumeration**
+
+```c#
+Season current = Season.Summer;
+if (current == Season.Summer || current == Season.Winter)
+	Console.WriteLine("Happy solstice!");
+else
+	Console.WriteLine("Happy equinox!");
+enum Season { Winter, Spring, Summer, Fall } 
+// New types MUST go after other code (or in another file).
+```
+
+> [!TIP]
+>
+> **Challenge: Simula’s Test**
+>
+> ```c#
+> LoopChest current = LoopChest.Locked;
+> while (true)
+> {
+>     Console.Write($"""The chest is {current.ToString().ToLower()}. What do you want to do? """);
+>     string state = Console.ReadLine();
+>     if (state == "unlock") {
+>         current = LoopChest.Unlocked;
+>     } else if (state == "open")
+>     {
+>         current = LoopChest.Open;        
+>     } else if (state == "close")
+>     {
+>         current = LoopChest.Unlocked;
+>     } else if (state == "lock")
+>     {
+>         current = LoopChest.Locked;
+>     }
+> }
+> 
+> enum LoopChest { Open, Unlocked, Locked};
+> ```
+
+
+
+#### **• UNDERLYING TYPES**
+
+​	The deep dark secret of **enumerations is that they are integers at heart**, though the compiler will ensure you don’t accidentally misuse them. Each enumeration has an **underlying type**, which is the **integer type** that it builds upon. The default underlying type is int, but you could change that:
+
+```c#
+enum Season : byte { Winter, Spring, Summer, Fall }
+```
+
+By default, these are given in the order they appear in the definition, **starting with 0**.
+
+```C#
+enum Season { Winter = 3, Spring = 6, Summer = 9, Fall = 12 }
+enum Season { Winter = 1, Spring, Summer, Fall } 
+// Spring = 2, Summer = 3, Fall = 4
+```
+
+The default value for an enumeration is **whichever one is assigned the number 0**.
+
+You can also **cast between ints and enumerations**:
+
+```C#
+int number = (int)Season.Fall;
+Season now = (Season)2;
+```
+
+
+
+
+
+------
+
+### TUPLES
+
+​	Tuples combine multiple elements into a single bundle: **(double, double) point = (2, 4)**;
+
+​	You can give (**ephemeral**) names to tuple elements, which can be used later: (double x, double
+
+y) point = (2, 4);
+
+​	Most C# programmers only use tuples **occasionally**.
+
+​	When **multiple data elements** are combined, it is sometimes referred to as a **composite type** because the larger thing is composed of the smaller pieces. Or you could say that we use **composition** to build the larger element.
+
+
+
+#### • THE BASICS OF TUPLES
+
+​	In C#, the simplest tool for creating composite types is called a tuple (pronounced “TOO-ples” or “TUP-ples”).
+
+```c#
+(string, int, int) score = ("R2-D2", 12420, 15);
+var score = ("R2-D2", 12420, 15);
+Console.WriteLine($"Name:{score.Item1} Level:{score.Item3} Score:{score.Item2}");
+```
+
+​	Behind the scenes, the names really are **Item1, Item2, and Item3**.
+
+```C#
+(string, int, int) score1 = ("R2-D2", 12420, 15);
+(string, int, int) score2 = score1; // An exact match works.
+(string, int) partialScore = score1; // Not the same number of items.
+(int, int, string) mixedUpScore = score1; // Items in a different order.
+```
+
+​	**Tuples are value types**, like int, bool, and double. If a tuple has parts that are **value types** themselves, those bytes will get copied. But if an item is a reference type, then the reference is copied.
+
+​	
+
+#### **• TUPLE ELEMENT NAMES**
+
+​	The names of the items in a tuple are **Item1, Item2, etc.** **Behind the scenes, that is precisely how they work.**
+
+```c#
+(string Name, int Points, int Level) score = ("R2-D2", 12420, 15);
+Console.WriteLine($"Name:{score.Name} Level:{score.Level} Score:{score.Points}");
+```
+
+​	Any unnamed item will keep its original ItemN name:
+
+```c#
+(string Name, int, int) score = ("R2-D2", 12420, 15);
+Console.WriteLine($"Name:{score.Name} Level:{score.Item3} Score:{score.Item2}");
+
+// When use var, the names will be inferred as well.
+var score = (Name: "R2-D2", Points: 12420, Level: 15);
+Console.WriteLine($"Name:{score.Name} Level:{score.Level} Score:{score.Points}");
+// For tuples, names are only cosmetic. 
+```
+
+​	
+
+#### **• TUPLES AND METHODS**
+
+```C#
+void DisplayScore((string Name, int Points, int Level) score)
+{
+    Console.WriteLine(
+      $"Name:{score.Name} Level:{score.Level} Score:{score.Points}");
+}
+```
+
+​	**Parameters cannot use var**, so we are obligated to list the tuple item types in this case.
+
+​	You can **return a tuple** from a method by placing its constituent parts in parentheses (names optional) in the spot where we list the return type:
+
+```C#
+(string Name, int Points, int Level) GetScore() => ("R2-D2", 12420, 15);
+
+var score = GetScore();
+Console.WriteLine($"Name:{score.Name} Level:{score.Level} Score:{score.Points}");
+```
+
+
+
+```c#
+(string One, int Two, int Three) score = GetScore();
+DisplayScore(score);
+(string N, int P, int L) GetScore() => ("R2-D2", 12420, 15);
+void DisplayScore((string Name, int Points, int Level) score)
+{
+    Console.WriteLine(
+    $"Name:{score.Name} Level:{score.Level} Score:{score.Points}");
+}
+// names are ephemeral and not a part of the tuple.
+```
+
+​	Here is a **tuple** with 16 elements to show a much bigger tuple, representing a **4×4 matrix**— something often used in games:
+
+```C#
+var matrix = (M11: 1, M12: 0, M13: 0, M14: 0,
+              M21: 0, M22: 1, M23: 0, M24: 0,
+              M31: 0, M32: 0, M33: 1, M34: 0,
+              M41: 0, M42: 0, M43: 0, M44: 1);
+```
+
+```C#
+(string Name, int Points, int Level)[] CreateHighScores()
+{
+    return new (string, int, int)[3]
+    {
+        ("R2-D2", 12420, 15),
+        ("C-3PO", 8543, 9),
+        ("GONK", -1, 1),
+    };
+}
+```
+
+
+
+#### **• DECONSTRUCTING TUPLES**
+
+​	There is a way to take all of the parts of a tuple and place them each into separate variables all at once. This is called **deconstruction or unpacking**.
+
+```c#
+string name;
+int points;
+int level;
+(name, points, level) = score;
+Console.WriteLine($"{name} reached level {level} with {points} points.");
+```
+
+```C#
+// The result is x and y have swapped values with only a single line
+double x = 4;
+double y = 2;
+(x, y) = (y, x);
+```
+
+
+
+#### **• Ignoring Elements with Discards**
+
+```c#
+(string name, int points, _) = score;
+// The _ is a discard variable.
+```
+
+
+
+#### **• TUPLES AND EQUALITY**
+
+​	Tuples are value types and thus, use **value semantics** when checking for equality.
+
+```c#
+(int, int) a = (1, 2);
+(int, int) b = (1, 2);
+Console.WriteLine(a == b); // True
+Console.WriteLine(a != b); // False
+
+var a = (X: 2, Y: 4);
+var b = (U: 2, V: 4);
+Console.WriteLine(a == b); // True
+```
+
+> [!TIP]
+>
+> **Challenge: Simula’s Soup**
+>
+> ```c#
+> using System.Diagnostics.Tracing;
+> (Food food, Ingredient ingredient, Seasoning seasoning) Special = (Food.Stew, Ingredient.Chicken, Seasoning.Spicy);
+> Console.WriteLine($"Today's Special Menu: {Special.seasoning} {Special.ingredient} {Special.food}");
+> Console.WriteLine($"""
+>                    Hey you! Welcome to Simula's Kitchen, what do you prefer for today?
+>                    (1) {(Food)1}? (2) {(Food)2}? (3) {(Food)3}? 
+>                    """);
+> int food = Convert.ToInt32(Console.ReadLine());
+> Console.WriteLine($"""
+>                    Well well well... You came to the right place, 
+>                    {(Food)food} is what we have today,
+>                    then tell me, which ingredient you prefer?...
+>                    (1) {(Ingredient)1}? (2) {(Ingredient)2}? (3) {(Ingredient)3}? (4) {(Ingredient)4}
+>                    """);
+> int ingredient = Convert.ToInt32(Console.ReadLine());
+> Console.WriteLine($"""
+>                    Perfect! Now would you like a little bit flavor?
+>                    (1) {(Seasoning)1} (2) {(Seasoning)2} (3) {(Seasoning)3} 
+>                    """);
+> int seasoning = Convert.ToInt32(Console.ReadLine());
+> Console.WriteLine($"""
+>                    All done! Enjoy your 
+>                    "{(Seasoning)seasoning} {(Ingredient)ingredient} {(Food)food}"
+>                    """);
+> enum Food {Soup = 1, Stew, Gumbo};
+> 
+> enum Ingredient
+> {
+>     Mushrooms = 1,
+>     Chicken,
+>     Carrots,
+>     Potatoes
+> };
+> 
+> enum Seasoning
+> {
+>     Spicy = 1,
+>     Salty, 
+>     Sweet
+> }
+> ```
+
+
+
+------
+
+### **CLASSES**
+
+#### **• DEFINING A NEW CLASS**
+
+​	 **Names** are usually capitalized with **UpperCamelCase**, just like enumerations and methods.
+
+```c#
+// <-- Your main method goes here.
+Score best = new Score();
+best.name = "R2-D2";
+best.points = 12420;
+best.level = 15;
+if (best.EarnedStar())
+  Console.WriteLine("You earned a star!");
+
+class Score
+{
+    public string name; // fields or instance variables
+    public int points;
+    public int level;
+  
+    public bool EarnedStar() => (points / level) > 1000;
+}
+// <-- Other classes and enumerations can go here.
+```
+
+​	**Fields** are variables created inside the object’s memory on the **heap**. They live for as long as the object lives and are a part of the object itself.
+
+​	**Object-Oriented Principle #1: Encapsulation—Combining data (fields) and the operations on that data (methods) into a well-defined unit (like a class).**	
+
+​	
+
+#### **• CONSTRUCTORS**
+
+```c#
+class Score
+{
+    public string name;
+    public int points;
+    public int level;
+  
+    public Score()	
+    {
+        name = "Unknown";
+        points = 0;
+        level = 1;
+    }
+    public bool EarnedStar() => (points / level) > 1000;
+}
+```
+
+​	**Constructors** must use the same name as the class, and they cannot list a return type.
+
+
+
+#### **• Name Hiding and the this Keyword**
+
+```c#
+class Score
+{
+    public string _name;
+    public int _points;
+    public int _level;
+    
+    public Score(string name, int points, int level)
+    {
+        _name = name;
+        _points = points;
+        _level = level;
+    }
+}
+```
+
+​	The **underscores** let us use similar names with a clear way to **differentiate fields from local variables and parameters.**
+
+```c#
+class Score
+{
+    public string name;
+    public int points;
+    public int level;
+    
+    public Score(string name, int points, int level)
+    {
+        this.name = name;
+        this.points = points;
+        this.level = level;
+    }
+}
+```
+
+​	The **this** keyword is like a special variable that always refers to the object you are currently in.
+
+
+
+#### **• Calling Other Constructors with this**
+
+```c#
+Score first = new();
+Score second = new("R2-D2", 12420, 15);
+
+// The compiler can infer that you are creating an instance of the Score class because it is assigned to a Score-typed variable. 
+// This feature is most valuable when our type name is long and complex.
+
+class Score
+{
+    public string _name;
+    public int _points;
+    public int _level;
+    
+    public Score() : this("Unknown", 0, 1)
+    {
+    }
+  
+    public Score(string name, int points, int level)
+    {
+        _name = name;
+        _points = points;
+        _level = level;
+    }
+}
+```
+
+> [!TIP]
+>
+> **Challenge: Vin Fletcher’s Arrows**
+>
+> ```c#
+> using System.Runtime.CompilerServices;
+> Console.WriteLine($"""Which type of the arrowhead you would want? (1) {Arrowhead.Steel}, (2) {Arrowhead.Wood} or (3) {Arrowhead.Obsidian}?""");
+> int arrowOrder = Convert.ToInt32(Console.ReadLine());
+> Console.WriteLine($"""Then which type of the fletching you would like? (1) {Fletching.Plastic}, (2) {Fletching.GooseFeathers} or (3) {Fletching.TurkeyFeathers}""");
+> int fletchingOrder = Convert.ToInt32(Console.ReadLine());
+> Console.WriteLine($"""Finally, what would be the length of your choice? Remember between 60 and 100 cm long""");
+> float shaftLength = float.Parse(Console.ReadLine());
+> 
+> Arrow userPick = new Arrow();
+> float costs = userPick.GetCost(0f,arrowOrder, fletchingOrder, shaftLength);
+> Console.WriteLine($"""Hello adventurer! Your cost will be {costs} golds""");
+> enum Arrowhead
+> {
+>     Steel = 1,
+>     Wood,
+>     Obsidian
+> }
+> 
+> enum Fletching
+> {
+>     Plastic = 1,
+>     TurkeyFeathers,
+>     GooseFeathers
+> }
+> 
+> class Arrow
+> {
+>     public Arrowhead _Head;
+>     public Fletching _Fletching;
+>     public float _ShaftLength;
+> 
+>     public Arrow() : this(Arrowhead.Steel, Fletching.Plastic, 60.0f)
+>     {
+>         
+>     }
+> 
+>     public Arrow(Arrowhead head, Fletching fletching, float shaftLength)
+>     {
+>         _Head = head;
+>         _Fletching = fletching;
+>         _ShaftLength = shaftLength;
+>     }
+> 
+>     public float GetCost(float totalCost, int arrowOrder, int fletchingOrder, float shaftLength)
+>     {
+>         while (true)
+>         {
+>             totalCost += arrowOrder switch
+>             {
+>                 1 => 10,
+>                 2 => 3,
+>                 3 => 5,
+>                 _ => 0
+>             };
+> 
+>             totalCost += fletchingOrder switch
+>             {
+>                 1 => 10,
+>                 2 => 3,
+>                 3 => 5,
+>                 _ => 0
+>             };
+> 
+>             totalCost += 0.05f * shaftLength;
+> 
+>             if (totalCost != 0f)
+>             {
+>                 return totalCost;
+>             }
+>             else
+>             {
+>                 Console.WriteLine("Sorry, we don't offer this in our store!");
+>             }
+>         } 
+>     }
+> }
+> ```
+
+
+
+------
+
+### **INFORMATION HIDING**
+
