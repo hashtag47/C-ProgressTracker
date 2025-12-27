@@ -1678,3 +1678,350 @@ class Score
 
 ### **INFORMATION HIDING**
 
+​	Data (fields) should be **private** in nearly all cases.
+
+​	**Abstraction**: when things are private, they can change **without affecting the outside world**. The outside world depends on the public parts, while anything private can change without problems.
+
+​	A third level is **internal**, which is meant to be used only inside the project.
+
+​	This level covers the next **two fundamental concepts of object-oriented programming**: **information hiding and abstraction**.
+
+​	**Object-Oriented Principle #2: Information Hiding—Only the object itself should directly access its data.**
+
+​	
+
+#### **• THE PUBLIC AND PRIVATE ACCESSIBILITY MODIFIERS**
+
+​	The **public** and **private** keywords are both called accessibility modifiers because they change the accessibility level of the thing they are applied to.
+
+```c#
+class Rectangle
+{
+    private float _width;
+    private float _height;
+    private float _area;
+  
+    public Rectangle(float width, float height)
+    {
+      _width = width;
+      _height = height;
+      _area = width * height;
+     }
+}
+```
+
+​	**If you don’t specify an accessibility level, members of a class will be private.**
+
+​	**Object-Oriented Principle #3: Abstraction—The outside world does not need to know each object or class’s inner workings and can deal with it as an abstract concept. Abstraction allows the inner workings to change without affecting the outside world.**
+
+
+
+#### **• TYPE ACCESSIBILITY LEVELS AND THE INTERNAL MODIFIER**
+
+​	The difference is that things made **public can be accessed everywhere**, including in other projects, while **internal can only be used in the project it is defined in**.
+
+​	There are **three levels** of **share/don’t-share decisions** to make. (1) Do I **share a project or not**? (2) Should this **individual type definition be shared** or not? (3) Should this **member—a field or a method—be shared** or not?  C# programmers usually consider these different levels in isolation.
+
+​	I’m bringing up **internal** here because it is the default accessibility level for a type if none is explicitly written out. **My advice is to always write out your intended accessibility level rather than leave it to the defaults.**
+
+​	By the way, while **type definitions must be either public or internal**, **members of a class can be public, private, or internal**. (For an **enumeration, members are automatically public, and you cannot change that**.)
+
+```c#
+public class MyClass { }      // Reference type
+public struct MyStruct { }    // Value type
+public enum MyEnum { }        // Value type
+public interface IMyInterface { } // Reference type
+```
+
+> [!TIP]
+>
+> **Challenge: Vin’s Trouble**
+>
+> ```c#
+> using System.Runtime.CompilerServices;
+> Console.WriteLine($"""Which type of the arrowhead you would want? (1) {Arrowhead.Steel}, (2) {Arrowhead.Wood} or (3) {Arrowhead.Obsidian}?""");
+> int arrowOrder = Convert.ToInt32(Console.ReadLine());
+> Console.WriteLine($"""Then which type of the fletching you would like? (1) {Fletching.Plastic}, (2) {Fletching.GooseFeathers} or (3) {Fletching.TurkeyFeathers}""");
+> int fletchingOrder = Convert.ToInt32(Console.ReadLine());
+> Console.WriteLine($"""Finally, what would be the length of your choice? Remember between 60 and 100 cm long""");
+> float shaftLength = float.Parse(Console.ReadLine());
+> 
+> Arrow userPick = new Arrow((Arrowhead)arrowOrder, (Fletching)fletchingOrder, shaftLength);
+> float costs = userPick.GetCost();
+> if (costs == -1.0f)
+> {
+>     Console.WriteLine("Sorry, we might need you to provide us with correct customized options");
+> }
+> else
+> {
+>     Console.WriteLine($"""Hello adventurer! Your cost will be {costs} golds""");
+> }
+> 
+> enum Arrowhead
+> {
+>     Steel = 1,
+>     Wood,
+>     Obsidian
+> }
+> 
+> enum Fletching
+> {
+>     Plastic = 1,
+>     TurkeyFeathers,
+>     GooseFeathers
+> }
+> 
+> class Arrow
+> {
+>     private Arrowhead _Head;
+>     private Fletching _Fletching;
+>     private float _ShaftLength;
+> 
+>     public Arrow() : this(Arrowhead.Steel, Fletching.Plastic, 60.0f)
+>     {
+>         
+>     }
+> 
+>     public Arrow(Arrowhead head, Fletching fletching, float shaftLength)
+>     {
+>         _Head = head;
+>         _Fletching = fletching;
+>         _ShaftLength = shaftLength;
+>     }
+> 
+>     public float GetCost()
+>     {
+>         if (GetShaftLength() == -1.0f)
+>         {
+>             return -1.0f;
+>         }
+> 
+>         float totalCost = 0f;
+>         
+>         while (true)
+>         {
+>             totalCost += _Head switch
+>             {
+>                 Arrowhead.Steel => 10,
+>                 Arrowhead.Wood => 3,
+>                 Arrowhead.Obsidian => 5,
+>                 _ => 0
+>             };
+> 
+>             totalCost += _Fletching switch
+>             {
+>                 Fletching.Plastic => 10,
+>                 Fletching.TurkeyFeathers => 3,
+>                 Fletching.GooseFeathers => 5,
+>                 _ => 0
+>             };
+>             
+>             totalCost += 0.05f * _ShaftLength;
+> 
+>             if (totalCost != 0f)
+>             {
+>                 return totalCost;
+>             }
+>             else
+>             {
+>                 Console.WriteLine("Sorry, we don't offer this in our store!");
+>             }
+>         } 
+>     }
+> 
+>     public Arrowhead GetArrowhead()
+>     {
+>         return _Head;
+>     }
+> 
+>     public Fletching GetFletching()
+>     {
+>         return _Fletching;
+>     }
+> 
+>     public float GetShaftLength()
+>     {
+>         if (_ShaftLength >= 60 && _ShaftLength <= 100)
+>         {
+>             return _ShaftLength;
+>         }
+>         else
+>         {
+>             return -1.0f;
+>         }
+>     }
+> }
+> ```
+
+
+
+------
+
+### **PROPERTIES**
+
+​	**Properties** give you field-like access while still protecting data with methods: 
+
+​	**public float Width { get => width; set => width = value; }**. To use a property: rectangle.Width = 3;
+
+​	**Auto-properties** are for when no extra logic is needed: **public float Width { get; set; }**
+
+​	<u>Properties can be **read-only**, only settable in a constructor: **public float Width { get; }**</u>
+
+​	Fields can also be **read-only**: private readonly float _width = 3;
+
+​	**With properties, objects can be initialized using object initializer syntax**: new Rectangle() { Width = 2, Height = 3 }.
+
+​	An **init** accessor is like a setter but **only usable in object initializer syntax**. public float Width { get; init; }
+
+
+
+#### **• THE BASICS OF PROPERTIES**
+
+​	In C#, there is a tool we can use to get the benefits of both **information hiding and abstraction** while keeping our code simple: **properties**. A property **pairs a getter and setter** under a shared name with **field-like** access.
+
+```c#
+// 1. Normal
+private float _width;
+public float GetWidth() => _width;
+public void SetWidth(float value) => _width = value;
+
+// 2. Property using expression bodies
+private float _width;
+public float Width
+{
+    get => _width;
+    set => _width = value;
+} // This defines a property with the name Width whose type is float.
+// It is typical to use UpperCamelCase for property names.
+
+// 3. Property using block bodies
+public float Width
+{
+    get
+    {
+        return _width;
+    }
+  // We didn’t define a value parameter, bu in essence, one automatically exists in a property setter.
+    set
+    {
+        _width = value;
+    }
+}
+
+// the field is called the property’s backing field or backing store. 
+// Properties do not require both getters and setters.
+public float Area
+{
+    get => _width * _height;
+}
+
+// If a property is get-only and the getter has an expression body, we can simplify it further:
+public float Area => _width * _height;
+```
+
+```c#
+public class Rectangle
+{
+  private float _width;
+  private float _height;
+  public Rectangle(float width, float height)
+  {
+      _width = width;
+      _height = height;
+  }
+  public float Width
+  {
+      get => _width;
+      set => _width = value;
+  }
+  public float Height
+  {
+      get => _height;
+      set => _height = value;
+  }
+  public float Area => _width * _height;
+}
+```
+
+​	**Field-like access to the properties instead of method-like access:**
+
+```c#
+Rectangle r = new Rectangle(2, 3);
+r.Width = 5;
+Console.WriteLine($"A {r.Width}x{r.Height} rectangle has an area of {r.Area}.");
+```
+
+```C#
+public float Width
+{
+    get => _width;
+    private set => _width = value;		
+}	
+```
+
+
+
+#### **• AUTO-IMPLEMENTED PROPERTIES**
+
+```c#
+// 1. Without auto-implementation
+public class Player
+{
+    private string _name;
+    public string Name
+    {
+        get => _name;
+        set => _name = value;
+    }
+}
+
+// 2. Auto-implementation property
+public class Player
+{
+		public string Name { get; set; }
+}
+
+// Initialize the backing field to a specific starting value
+public string Name { get; set; } = "Player";
+```
+
+```c#
+public class Rectangle // Note how short this code got with auto-properties.
+{
+    public float Width { get; set; }
+    public float Height { get; set; }
+    public float Area => Width * Height;
+    public Rectangle(float width, float height)
+    {
+        Width = width;
+        Height = height;
+    }
+}
+```
+
+
+
+#### **• IMMUTABLE FIELDS AND PROPERTIES**
+
+​	**Read-only properties**. When a property is **immutable**, its behavior is like concrete or a tattoo. **You have complete control when the object is being created, but it cannot be changed again once the object is created.**
+
+​	If you have a field that you don’t want to change after construction, you can apply the **readonly** keyword to it as a modifier:
+
+```c#
+public class Player
+{
+    private readonly string _name;
+    public Player(string name)
+    {
+        _name = name;
+    }
+}
+```
+
+​	**When all of a class’s properties and fields are immutable (get-only auto-properties and readonly fields), the entire object is immutable**.
+
+
+
+#### **• OBJECT INITIALIZER SYNTAX AND INIT PROPERTIES**
+
+​	
