@@ -2024,4 +2024,378 @@ public class Player
 
 #### **• OBJECT INITIALIZER SYNTAX AND INIT PROPERTIES**
 
-​	
+​	C# provides a simple syntax for **setting properties right as the object is created** called **object initializer** syntax, shown below:	
+
+```c#
+// 1. Object Initializer
+Circle circle = new Circle() { Radius = 3, X = -4 };
+// 2. Parameterless object initializer
+Circle circle = new Circle { Radius = 3, X = -4 };
+```
+
+​	**You cannot use object initializer syntax with properties that are get-only.** While you can assign a value to them in the constructor, object initializer syntax comes after the constructor finishes. This is a **predicament** because it would mean you must make your properties mutable (have a setter) to use them in object initializer syntax, which is too much power in some situations.
+
+​	The middle ground is an **init** accessor. This is a setter that can be used in limited circumstances, including with an inline initializer (the 0’s below) and in the constructor, but also in object initializer syntax:
+
+```c#
+public class Circle
+{
+    public float X { get; init; } = 0;
+    public float Y { get; init; } = 0;
+    public float Radius { get; init; } = 0;
+}
+
+Circle circle = new Circle { X = 1, Y = 4, Radius = 3 };
+// This would not compile if it were not a comment:
+// circle.X = 2;
+```
+
+> [!TIP]
+>
+> #### **Challenge: The Properties of Arrows**
+>
+> ```c#
+> using System.Runtime.CompilerServices;
+> Console.WriteLine($"""Which type of the arrowhead you would want? (1) {Arrowhead.Steel}, (2) {Arrowhead.Wood} or (3) {Arrowhead.Obsidian}?""");
+> int arrowOrder = Convert.ToInt32(Console.ReadLine());
+> Console.WriteLine($"""Then which type of the fletching you would like? (1) {Fletching.Plastic}, (2) {Fletching.GooseFeathers} or (3) {Fletching.TurkeyFeathers}""");
+> int fletchingOrder = Convert.ToInt32(Console.ReadLine());
+> Console.WriteLine($"""Finally, what would be the length of your choice? Remember between 60 and 100 cm long""");
+> float shaftLength = float.Parse(Console.ReadLine());
+> 
+> Arrow userPick = new Arrow((Arrowhead)arrowOrder, (Fletching)fletchingOrder, shaftLength);
+> // Arrow userPick = new Arrow 
+> //{ 
+> //    Head = (Arrowhead)arrowOrder, 
+> //    Fletching = (Fletching)fletchingOrder, 
+> //    ShaftLength = shaftLength 
+> //};
+> float costs = userPick.GetCost();
+> Console.WriteLine($"""Hello adventurer! Your cost will be {costs} golds""");
+> 
+> 
+> enum Arrowhead
+> {
+>     Steel = 1,
+>     Wood,
+>     Obsidian
+> }
+> 
+> enum Fletching
+> {
+>     Plastic = 1,
+>     TurkeyFeathers,
+>     GooseFeathers
+> }
+> 
+> class Arrow
+> {
+>     public Arrowhead Head { get; init; } = Arrowhead.Steel;
+>     public Fletching Fletching { get; init; } = Fletching.Plastic;
+>     private float ShaftLength = 60.0f;
+>     public float ShaftLength { 
+>         get => _ShaftLength;
+>         // It's a special keyword that C# provides automatically in property setters
+>         // and init accessors to represent the incoming value
+>         init
+>         {
+>             if (value < 60 || value > 100)
+>             {
+>                 throw new ArgumentException("Shaft length must be between 60 and 100 cm");
+>             }    
+>         }
+>         
+>     }
+> 
+>     public Arrow() : this(Arrowhead.Steel, Fletching.Plastic, 60.0f)
+>     {
+> 
+>     }
+> 
+>     public Arrow(Arrowhead head, Fletching fletching, float shaftLength)
+>     {
+>         Head = head;
+>         Fletching = fletching;
+>         ShaftLength = shaftLength;
+>     }
+> 
+>     public float GetCost()
+>     {
+>         float totalCost = 0f;
+>         
+>         totalCost += Head switch
+>         {
+>             Arrowhead.Steel => 10,
+>             Arrowhead.Wood => 3,
+>             Arrowhead.Obsidian => 5,
+>             _ => 0
+>         };
+> 
+>         totalCost += Fletching switch
+>         {
+>             Fletching.Plastic => 10,
+>             Fletching.TurkeyFeathers => 3,
+>             Fletching.GooseFeathers => 5,
+>             _ => 0
+>         };
+> 
+>         totalCost += 0.05f * ShaftLength;
+>         return totalCost;
+>     }
+> }
+> ```
+
+> [!IMPORTANT]
+>
+> Many classes use both - constructors for required parameters, object initializers for optional ones:
+>
+> ```c#
+> class Email
+> {
+>     public string To { get; init; }
+>     public string Subject { get; init; }
+>     public string Body { get; init; }
+>     public bool IsHighPriority { get; init; } = false;  // Optional
+>     public List<string> Attachments { get; init; } = new();  // Optional
+>     
+>     public Email(string to, string subject, string body)  // Required params
+>     {
+>         To = to;
+>         Subject = subject;
+>         Body = body;
+>     }
+> }
+> 
+> // Use constructor for required, initializer for optional:
+> var email = new Email("user@example.com", "Hello", "Hi there!")
+> {
+>     IsHighPriority = true,
+>     Attachments = { "file.pdf" }
+> };
+> ```
+
+
+
+#### **• ANONYMOUS TYPES**
+
+```c#
+var anonymous = new { Name = "Steve", Age = 34 };
+Console.WriteLine($"{anonymous.Name} is {anonymous.Age} years old.");
+```
+
+
+
+------
+
+### **STATIC**
+
+​	If a **class is marked static**, it can only contain **static members** (Console, Convert, Math).
+
+```c#
+public class Score
+{
+    private static readonly int PointThreshold = 1000;
+    private static readonly int LevelThreshold = 4;
+    // If they are static, they tend to be UpperCamelCase instead.
+  
+}
+```
+
+
+
+#### **• Global State**
+
+​	Static fields have their uses, but a word of caution is in order. If a field is **static**, **public**, and **not read-only**, it creates global state. 
+
+
+
+#### **• Static Properties**	
+
+```c#
+public class Score
+{
+    public static int PointThreshold { get; } = 1000;
+    public static int LevelThreshold { get; } = 4;
+    // ...
+}
+```
+
+
+
+#### **• Static Methods**
+
+​	**Methods** can also be **static**. A static method is not tied to a single instance, so **it cannot refer to any non-static (instance) fields, properties, or methods**.
+
+​	Static methods are most often used for **utility or helper methods** that **provide some sort of service related to the class** they are placed in, but that isn’t tied directly to a single instance.
+
+​	Another common use of static methods is a **factory method**, which **creates new instances for the outside world as an alternative to calling a constructor**. For example, this method could be a factory method in our Rectangle class:
+
+```c#
+public static Rectangle CreateSquare(float size) => new Rectangle(size, size);
+Rectangle rectangle = Rectangle.CreateSquare(2);
+```
+
+
+
+#### **• Static Constructors**	
+
+```c#
+public class Score
+{
+    public static readonly int PointThreshold;
+    public static readonly int LevelThreshold;
+  	
+    static Score()
+    {
+    PointThreshold = 1000;
+    LevelThreshold = 4;
+      }
+// ...
+}
+```
+
+A **static constructor cannot have parameters**, **nor can you call it directly**. Instead, it **runs automatically the first time you use the class**. Because of this, you cannot place an accessibility modifier like public or private on it.
+
+
+
+#### **• STATIC CLASSES**
+
+```c#
+public static class Utilities
+{
+    public static int Helper1() => 4;
+    public static double HelperProperty => 4.0;
+    public static int AddNumbers(int a, int b) => a + b;
+}
+```
+
+> [!TIP]
+>
+> **Challenge: Arrow Factories**
+>
+> ```c#
+> using System.Runtime.CompilerServices;
+> Console.WriteLine($"""
+>                    Hi adventurer, what brings you to my store? You wanna build a new arrow?
+>                    Well well well... We have four types arrows you could choose:
+>                    (1) Elite Arrow (2) Beginner Arrow (3) Marksman Arrow (4) Custom Arrow
+>                    """);
+> int choice = Convert.ToInt32(Console.ReadLine());
+> Arrow userPick;
+> if (choice == 4)
+> {
+>     Console.WriteLine($"""Which type of the arrowhead you would want? (1) {Arrowhead.Steel}, (2) {Arrowhead.Wood} or (3) {Arrowhead.Obsidian}?""");
+>     int arrowOrder = Convert.ToInt32(Console.ReadLine());
+>     Console.WriteLine($"""Then which type of the fletching you would like? (1) {Fletching.Plastic}, (2) {Fletching.GooseFeathers} or (3) {Fletching.TurkeyFeathers}""");
+>     int fletchingOrder = Convert.ToInt32(Console.ReadLine());
+>     Console.WriteLine($"""Finally, what would be the length of your choice? Remember between 60 and 100 cm long""");
+>     float shaftLength = float.Parse(Console.ReadLine());
+> 
+>     userPick = new Arrow((Arrowhead)arrowOrder, (Fletching)fletchingOrder, shaftLength);
+> }
+> else
+> {
+>     userPick = choice switch
+>     {
+>         1 => Arrow.CreateEliteArrow(),
+>         2 => Arrow.CreateBeginnerArrow(),
+>         3 => Arrow.CreateMarksArrow(),
+>         _ => throw new NotImplementedException(),
+>     };
+> }
+> 
+> float costs = userPick.GetCost();
+> Console.WriteLine($"""Hello adventurer! Your cost will be {costs} golds""");
+> 
+> 
+> enum Arrowhead
+> {
+>     Steel = 1,
+>     Wood,
+>     Obsidian
+> }
+> 
+> enum Fletching
+> {
+>     Plastic = 1,
+>     TurkeyFeathers,
+>     GooseFeathers
+> }
+> 
+> class Arrow
+> {
+>     public Arrowhead Head { get; init; } = Arrowhead.Steel;
+>     public Fletching Fletching { get; init; } = Fletching.Plastic;
+>     private float _ShaftLength = 60.0f;
+>     public float ShaftLength { 
+>         get => _ShaftLength;
+>         // It's a special keyword that C# provides automatically in property setters
+>         // and init accessors to represent the incoming value
+>         init
+>         {
+>             if (value < 60 || value > 100)
+>             {
+>                 throw new ArgumentException("Shaft length must be between 60 and 100 cm");
+>             }    
+>         }
+>         
+>     }
+> 
+>     public Arrow() : this(Arrowhead.Steel, Fletching.Plastic, 60.0f)
+>     {
+> 
+>     }
+> 
+>     public Arrow(Arrowhead head, Fletching fletching, float shaftLength)
+>     {
+>         Head = head;
+>         Fletching = fletching;
+>         ShaftLength = shaftLength;
+>     }
+> 
+>     public static Arrow CreateEliteArrow()
+>     {
+>         return new Arrow(Arrowhead.Steel, Fletching.Plastic, 95.0f);
+>     }
+> 
+>     public static Arrow CreateBeginnerArrow()
+>     {
+>         return new Arrow(Arrowhead.Wood, Fletching.GooseFeathers, 75.0f);
+>     }
+> 
+>     public static Arrow CreateMarksArrow()
+>     {
+>         return new Arrow(Arrowhead.Steel, Fletching.GooseFeathers, 65.0f);
+>     }
+> 
+>     public float GetCost()
+>     {
+>         float totalCost = 0f;
+>         
+>         totalCost += Head switch
+>         {
+>             Arrowhead.Steel => 10,
+>             Arrowhead.Wood => 3,
+>             Arrowhead.Obsidian => 5,
+>             _ => 0
+>         };
+> 
+>         totalCost += Fletching switch
+>         {
+>             Fletching.Plastic => 10,
+>             Fletching.TurkeyFeathers => 3,
+>             Fletching.GooseFeathers => 5,
+>             _ => 0
+>         };
+> 
+>         totalCost += 0.05f * ShaftLength;
+>         return totalCost;
+>     }
+> }
+> ```
+
+
+
+------
+
+### **Null References**
