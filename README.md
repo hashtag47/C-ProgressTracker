@@ -3,6 +3,8 @@
 > [!CAUTION]
 >
 > Following the **C# Player's Guide of RB**, With the **Solutions Appended**
+>
+> Official Solutions: https://csharpplayersguide.com/solutions/
 
 ## PART 1: Basics
 
@@ -2399,3 +2401,490 @@ public static class Utilities
 ------
 
 ### **Null References**
+
+​	Check for null with **x == null**, the **null conditional operators x?.DoStuff()** and **x?[3]**, and use **??** to allow null values to fall back to some other default: **x ?? "empty"**	
+
+```c#
+string name = null;
+// A null reference indicates the absence of a value
+
+string name = null;
+Console.WriteLine(name.Length);
+// Crush
+```
+
+
+
+#### **• NULL OR NOT?**
+
+​	For reference-typed variables, stop and think if null should be an option.
+
+​	Any reference-typed variable can either have a ? at the end or not. A ? means that it may legitimately contain a null value.
+
+```c#
+string? name = Console.ReadLine(); // Can return null!
+```
+
+
+
+#### **• CHECKING FOR NULL**
+
+```c#
+string? name = Console.ReadLine();
+if (name != null) // null check
+	Console.WriteLine("The name is not null.");
+```
+
+
+
+#### **• Null-Conditional Operators: ?. and ?[]**
+
+```c#
+private string? GetTopPlayerName()
+{
+    if (_scoreManager == null) return null;
+  
+    Score[]? scores = _scoreManager.GetScores();
+    if (scores == null) return null;
+  
+    Score? topScore = scores[0];
+    if (topScore == null) return null;
+  
+    return topScore.Name;
+}
+```
+
+There is **another way**: **null-conditional operators**. The **?.** and **?[]** operators can be used in place of . and [] to simultaneously check for null and access the member:
+
+```c#
+private string? GetTopPlayerName()
+{
+		return _scoreManager?.GetScores()?[0]?.Name;
+}
+```
+
+Both ?. and ?[] evaluate the part before it to see if it is null. If it is, then no further evaluation happens, and the whole expression evaluates to null.
+
+
+
+#### **• The Null Coalescing Operator: ??**
+
+```c#
+private string GetTopPlayerName() // No longer needs to allow nulls.
+{
+		return _scoreManager?.GetScores()?[0]?.Name ?? "(not found)";
+}
+```
+
+If the code before the **?? evaluates to null**, then the **fallback value** of "(not found)" will be used instead.
+
+```c#
+private string GetTopPlayerName()
+{
+    string? name = _scoreManager?.GetScores()?[0]?.Name;
+    name ??= "(not found)";
+    return name; // No compiler warning. `??=` ensures we have a real value.
+}
+```
+
+
+
+#### **• The Null-Forgiving Operator: !**
+
+we can use the **null-forgiving operator**: !. It tells the compiler, “I know this looks like a potential null problem, but it won’t be. Trust me.”
+
+```c#
+string message = MightReturnNullIfNegative(+10)!;
+```
+
+**Use ! sparingly, but use it when needed.**
+
+
+
+------
+
+### **OBJECT-ORIENTED DESIGN**
+
+Object-oriented design is the part of crafting software where we decide:
+
+​	• which objects should exist in our program,
+
+​	• the classes each of those objects belong to,
+
+​	• what responsibilities each class or object should handle,
+
+​	• when objects should come into existence,
+
+​	• when objects should go out of existence,
+
+​	• which objects must collaborate with or rely upon which other objects,
+
+​	• and how an object knows about the other objects it works with.
+
+Object-oriented design is sometimes referred to by the simpler terms **software design** or **design**.
+
+
+
+#### **• REQUIREMENTS**
+
+​	This is sometimes called requirements gathering, though that word has baggage.
+
+
+
+#### **• DESIGNING THE SOFTWARE**
+
+##### • Noun Extraction
+
+​	**Concepts** that appear in the requirements will often lead to **classes of objects** in your design.
+
+​	**Jobs or tasks** that appear in the requirements will often lead to responsibilities that your software must be able to do. 
+
+​	You can start this process by **highlighting the nouns** (and **noun phrases**) and **verbs** (and **verb phrases**) that appear in the requirements. This is called noun extraction or noun and verb extraction. 
+
+
+
+#####  **• UML**
+
+​	Unified Modeling Language, or UML.
+
+
+
+##### **• CRC Cards**
+
+​	CRC cards are a way to think through potential object-oriented designs and flesh out some detail.
+
+​	CRC is short for **Class-Responsibility-Collaborator**.
+
+
+
+> [!IMPORTANT]
+>
+> **P184** This approach is close to an architecture sometimes used in games called the **Entity-Component-System** architecture.
+>
+> Please review this important part about how to design the classes.
+
+
+
+##### **• Evaluating a Design**
+
+​	**Rule #1**: It has to work. 
+
+​	**Rule #2**: Prefer designs that convey meaning and intent.
+
+​	**Rule #3**: Designs should not contain duplication.
+
+​	**Rule #4**: Designs should not have unused or unnecessary elements.
+
+​	
+
+##### **• CREATING CODE**
+
+```c#
+public class Asteroid
+{
+    public float PositionX { get; private set; }
+    public float PositionY { get; private set; }
+    public float VelocityX { get; private set; }
+    public float VelocityY { get; private set; }
+
+    public Asteroid(float positionX, float positionY, float velocityX, float velocityY)
+    {
+        PositionX = positionX;
+        PositionY = positionY;
+        VelocityX = velocityX;
+        VelocityY = velocityY;
+    }
+
+    public void Update()
+    {
+        PositionX += VelocityX;
+        PositionY += VelocityY;
+    }
+}
+
+public class AsteroidsGame
+{
+    private Asteroid[] _asteroids;
+
+    public AsteroidsGame()
+    {
+        _asteroids = new Asteroid[5];
+        _asteroids[0] = new Asteroid(100, 200, -4, -2);
+        _asteroids[1] = new Asteroid(-50, 100, -1, +3);
+        _asteroids[2] = new Asteroid(0, 0, 2, 1);
+        _asteroids[3] = new Asteroid(400, -100, -3, -1);
+        _asteroids[4] = new Asteroid(200, -300, 0, 3);
+    }
+
+    public void Run()
+    {
+        while (true)
+        {
+            foreach(Asteroid asteroid in _asteroids)
+                asteroid.Update();
+        }
+    }
+}
+```
+
+
+
+##### **• HOW TO COLLABORATE**
+
+​	**Objects collaborate by calling members (methods, properties, etc.) on the object they need help from.**
+
+ 1. **Creating New Objects**
+
+ 2. **Constructor Parameters**
+
+    Passing in the object through a constructor parameter is a popular choice **if an object needs another object from the beginning but can’t or shouldn’t just use new to make a new one.**
+
+    ```c#
+    public AsteroidsGame(Asteroid[] startingAsteroids)
+    {
+    		_asteroids = startingAsteroids;
+    }
+    ```
+
+3. **Method Parameters**
+
+​	On the other hand, if an object **only needs a reference to something for a single method**, it can be passed in as a method parameter.
+
+```c#
+public class AsteroidDriftingSystem
+{
+    public void Update(Asteroid[] asteroids)
+    {
+    		foreach (Asteroid asteroid in asteroids)
+    		{
+            asteroid.PositionX += asteroid.VelocityX;
+            asteroid.PositionY += asteroid.VelocityY;
+    		}
+    }
+}
+```
+
+4. **Asking Another Object**
+
+```c#
+public void Update(AsteroidsGame game)
+{
+    foreach (Asteroid asteroid in game.Asteroids)
+    {
+        asteroid.PositionX += asteroid.VelocityX;
+        asteroid.PositionY += asteroid.VelocityY;
+    }
+}
+```
+
+5. **Supplying the Reference via Property or Method**
+
+   Suppose you can’t supply a reference to an object in the constructor but need it for more than one method.
+
+   ```c#
+   public class AsteroidDriftingSystem
+   {
+       // Initialize this to an empty array, so we know it will never be null.
+       public Asteroid[] Asteroids { get; set; } = new Asteroid[0];
+     
+       public void Update()
+       {
+       		foreach (Asteroid asteroid in Asteroids)
+       		{
+               asteroid.PositionX += asteroid.VelocityX;
+               asteroid.PositionY += asteroid.VelocityY;
+       		}
+       }
+   }
+   ```
+
+6. ##### **Static Members**
+
+   A final approach would be to **use a static property**, **method**, or **field**. If it is public, these can be reached from anywhere.
+
+   ```c#
+   AsteroidsGame.Current = new AsteroidsGame();
+   // ...
+   
+   public class AsteroidsGame
+   {
+   		public static AsteroidsGame Current { get; set;}
+     // ...
+   } 
+   
+   // Then AsteroidDriftingSystem can access the game through the static property
+   public void Update()
+   {
+       foreach (Asteroid asteroid in AsteroidsGame.Current.Asteroids)
+       {
+           asteroid.PositionX += asteroid.VelocityX;
+           asteroid.PositionY += asteroid.VelocityY;
+   		}
+   }
+   ```
+
+   Changing the structure of your code without changing what it does is called **refactoring**.
+
+
+
+------
+
+### **THE CATACOMBS OF THE CLASS**
+
+> [!TIP]
+>
+> **Boss: Battle The Point**
+>
+> ```c#
+> 	Point p1 = new Point { X = 2, Y = 3 };
+> 	Point p2 = new Point(-4, 0);
+> 	Console.WriteLine($""" ({p1.X}, {p1.Y}) """);
+>   Console.WriteLine($""" ({p2.X}, {p2.Y}) """);
+> 
+> public class Point
+> {
+>     public float X { get; init; } = 0f;
+>     public float Y { get; init; } = 0f;
+> 
+>     public Point(float x, float y)
+>     {
+>         X = x;
+>         Y = y;
+>     }
+> 
+>     public Point() : this(0f, 0f)
+>     {
+>     }
+> }
+> ```
+>
+> **Boss Battle: The Color**
+>
+> ```c#
+> Color c1 = new Color(128, 128, 128);
+> Color yellow = Color.Yellow;
+> Console.WriteLine($"""
+>                    The first color is ({c1.Red}, {c1.Green}, {c1.Blue}))
+>                    The second color is ({yellow.Red}, {yellow.Green}, {yellow.Blue})
+>                    """);
+> 
+> public class Color
+> {
+>     public byte Red { get; }
+>     public byte Green { get; }
+>     public byte Blue { get; }
+> 
+>     // public Color() : this(255, 255, 255)
+>     // {
+>     //     
+>     // }
+>     // Can use object initializer via parameterless constructor
+> 
+>     public Color(byte red, byte green, byte blue)
+>     {
+>         Red = red;
+>         Green = green;
+>         Blue = blue;
+>     }
+> 
+>     public static Color White { get;  } = new Color(255, 255, 255);
+> 
+>     public static Color Black { get; } = new Color(0, 0, 0);
+> 
+>     // public static Color Orange = new Color { Red = 999, Green = 999, Blue = 999 };
+>     public static Color _Red { get; } = new Color(255, 0, 0);
+>     public static Color Orange { get; } = new Color(255, 165, 0);
+>     public static Color Yellow { get; } = new Color(255, 255, 0);
+>     public static Color _Green { get; } = new Color(0, 128, 0);
+>     public static Color _Blue { get; } = new(0, 0, 255);
+>     public static Color Purple { get; } = new Color(128, 0, 128);
+> }
+> 
+> // In C#, the convention is to expose data through properties, not fields 
+> // Fields should typically be private
+> // Properties provide a consistent public interface
+> ```
+>
+> **Boss Battle: The Card**
+>
+> ```c#
+> int ColorCount = 0;
+> int RankCount = 0;
+> // C# typeof() ≈ Java .class 
+> foreach (Colors color in Enum.GetValues(typeof(Colors)))
+>     ColorCount++;
+> foreach (Ranks rank in Enum.GetValues(typeof(Ranks)))
+>     RankCount++;
+> 
+> Card[] deck = new Card[ColorCount * RankCount];
+> 
+> int index = 0;
+> foreach (Colors color in Enum.GetValues(typeof(Colors)) )
+> {
+>     foreach (Ranks rank in Enum.GetValues(typeof(Ranks)))
+>     {
+>         deck[index++] = new Card(color, rank);
+>         Console.WriteLine($"""The {color} {rank}""");
+>     }
+>         
+> }
+> 
+> public class Card
+> {
+>     // Not use parameterless constructor here, object initializer is suitable for optional fields.
+>     public Colors Color { get; }
+>     public Ranks Rank { get; }
+> 
+>     public Card(Colors color, Ranks rank)
+>     {
+>         Color = color;
+>         Rank = rank;
+>     }
+> 
+>     public bool IsSymbol => Rank == Ranks.Ampersand ||  Rank == Ranks.Percent ||   Rank == Ranks.Caret || Rank == Ranks.DollarSign;
+>     public bool IsNumber => !IsSymbol;
+>     // public bool IsSymbol 
+>     // { 
+>     //     get 
+>     //     { 
+>     //         return Rank == Rank.Ampersand || Rank == Rank.Caret || ...;
+>     //     }
+>     // }
+>     // The => syntax is just a shorter way to write a read-only property with a getter
+>     // C# convention - Boolean flags are typically properties, not methods
+> }
+> 
+> public enum Colors{
+>     Red ,
+>     Green,
+>     Blue,
+>     Yellow
+> }
+> 
+> public enum Ranks
+> {
+>     One ,
+>     Two,
+>     Three,
+>     Four,
+>     Five,
+>     Six,
+>     Seven,
+>     Eight,
+>     Nine,
+>     Ten,
+>     DollarSign,
+>     Percent,
+>     Caret,
+>     Ampersand
+> }
+> ```
+>
+> **Boss Battle: The Locked Door**
+>
+> ```c#
+> 	
+> ```
+>
+> 
+
