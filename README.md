@@ -2739,22 +2739,22 @@ public void Update(AsteroidsGame game)
 > 	Point p1 = new Point { X = 2, Y = 3 };
 > 	Point p2 = new Point(-4, 0);
 > 	Console.WriteLine($""" ({p1.X}, {p1.Y}) """);
->   Console.WriteLine($""" ({p2.X}, {p2.Y}) """);
+> Console.WriteLine($""" ({p2.X}, {p2.Y}) """);
 > 
 > public class Point
 > {
->     public float X { get; init; } = 0f;
->     public float Y { get; init; } = 0f;
+>  public float X { get; init; } = 0f;
+>  public float Y { get; init; } = 0f;
 > 
->     public Point(float x, float y)
->     {
->         X = x;
->         Y = y;
->     }
+>  public Point(float x, float y)
+>  {
+>      X = x;
+>      Y = y;
+>  }
 > 
->     public Point() : this(0f, 0f)
->     {
->     }
+>  public Point() : this(0f, 0f)
+>  {
+>  }
 > }
 > ```
 >
@@ -2764,40 +2764,40 @@ public void Update(AsteroidsGame game)
 > Color c1 = new Color(128, 128, 128);
 > Color yellow = Color.Yellow;
 > Console.WriteLine($"""
->                    The first color is ({c1.Red}, {c1.Green}, {c1.Blue}))
->                    The second color is ({yellow.Red}, {yellow.Green}, {yellow.Blue})
->                    """);
+>                 The first color is ({c1.Red}, {c1.Green}, {c1.Blue}))
+>                 The second color is ({yellow.Red}, {yellow.Green}, {yellow.Blue})
+>                 """);
 > 
 > public class Color
 > {
->     public byte Red { get; }
->     public byte Green { get; }
->     public byte Blue { get; }
+>  public byte Red { get; }
+>  public byte Green { get; }
+>  public byte Blue { get; }
 > 
->     // public Color() : this(255, 255, 255)
->     // {
->     //     
->     // }
->     // Can use object initializer via parameterless constructor
+>  // public Color() : this(255, 255, 255)
+>  // {
+>  //     
+>  // }
+>  // Can use object initializer via parameterless constructor
 > 
->     public Color(byte red, byte green, byte blue)
->     {
->         Red = red;
->         Green = green;
->         Blue = blue;
->     }
+>  public Color(byte red, byte green, byte blue)
+>  {
+>      Red = red;
+>      Green = green;
+>      Blue = blue;
+>  }
 > 
->     public static Color White { get;  } = new Color(255, 255, 255);
+>  public static Color White { get;  } = new Color(255, 255, 255);
 > 
->     public static Color Black { get; } = new Color(0, 0, 0);
+>  public static Color Black { get; } = new Color(0, 0, 0);
 > 
->     // public static Color Orange = new Color { Red = 999, Green = 999, Blue = 999 };
->     public static Color _Red { get; } = new Color(255, 0, 0);
->     public static Color Orange { get; } = new Color(255, 165, 0);
->     public static Color Yellow { get; } = new Color(255, 255, 0);
->     public static Color _Green { get; } = new Color(0, 128, 0);
->     public static Color _Blue { get; } = new(0, 0, 255);
->     public static Color Purple { get; } = new Color(128, 0, 128);
+>  // public static Color Orange = new Color { Red = 999, Green = 999, Blue = 999 };
+>  public static Color _Red { get; } = new Color(255, 0, 0);
+>  public static Color Orange { get; } = new Color(255, 165, 0);
+>  public static Color Yellow { get; } = new Color(255, 255, 0);
+>  public static Color _Green { get; } = new Color(0, 128, 0);
+>  public static Color _Blue { get; } = new(0, 0, 255);
+>  public static Color Purple { get; } = new Color(128, 0, 128);
 > }
 > 
 > // In C#, the convention is to expose data through properties, not fields 
@@ -2812,78 +2812,284 @@ public void Update(AsteroidsGame game)
 > int RankCount = 0;
 > // C# typeof() ≈ Java .class 
 > foreach (Colors color in Enum.GetValues(typeof(Colors)))
->     ColorCount++;
+>  ColorCount++;
 > foreach (Ranks rank in Enum.GetValues(typeof(Ranks)))
->     RankCount++;
+>  RankCount++;
 > 
 > Card[] deck = new Card[ColorCount * RankCount];
 > 
 > int index = 0;
 > foreach (Colors color in Enum.GetValues(typeof(Colors)) )
 > {
->     foreach (Ranks rank in Enum.GetValues(typeof(Ranks)))
->     {
->         deck[index++] = new Card(color, rank);
->         Console.WriteLine($"""The {color} {rank}""");
->     }
->         
+>  foreach (Ranks rank in Enum.GetValues(typeof(Ranks)))
+>  {
+>      deck[index++] = new Card(color, rank);
+>      Console.WriteLine($"""The {color} {rank}""");
+>  }
+> 
 > }
 > 
 > public class Card
 > {
->     // Not use parameterless constructor here, object initializer is suitable for optional fields.
->     public Colors Color { get; }
->     public Ranks Rank { get; }
+>  // Not use parameterless constructor here, object initializer is suitable for optional fields.
+>  public Colors Color { get; }
+>  public Ranks Rank { get; }
 > 
->     public Card(Colors color, Ranks rank)
->     {
->         Color = color;
->         Rank = rank;
->     }
+>  public Card(Colors color, Ranks rank)
+>  {
+>      Color = color;
+>      Rank = rank;
+>  }
 > 
->     public bool IsSymbol => Rank == Ranks.Ampersand ||  Rank == Ranks.Percent ||   Rank == Ranks.Caret || Rank == Ranks.DollarSign;
->     public bool IsNumber => !IsSymbol;
->     // public bool IsSymbol 
->     // { 
->     //     get 
->     //     { 
->     //         return Rank == Rank.Ampersand || Rank == Rank.Caret || ...;
->     //     }
->     // }
->     // The => syntax is just a shorter way to write a read-only property with a getter
->     // C# convention - Boolean flags are typically properties, not methods
+>  public bool IsSymbol => Rank == Ranks.Ampersand ||  Rank == Ranks.Percent ||   Rank == Ranks.Caret || Rank == Ranks.DollarSign;
+>  public bool IsNumber => !IsSymbol;
+>  // public bool IsSymbol 
+>  // { 
+>  //     get 
+>  //     { 
+>  //         return Rank == Rank.Ampersand || Rank == Rank.Caret || ...;
+>  //     }
+>  // }
+>  // The => syntax is just a shorter way to write a read-only property with a getter
+>  // C# convention - Boolean flags are typically properties, not methods
 > }
 > 
 > public enum Colors{
->     Red ,
->     Green,
->     Blue,
->     Yellow
+>  Red ,
+>  Green,
+>  Blue,
+>  Yellow
 > }
 > 
 > public enum Ranks
 > {
->     One ,
->     Two,
->     Three,
->     Four,
->     Five,
->     Six,
->     Seven,
->     Eight,
->     Nine,
->     Ten,
->     DollarSign,
->     Percent,
->     Caret,
->     Ampersand
+>  One ,
+>  Two,
+>  Three,
+>  Four,
+>  Five,
+>  Six,
+>  Seven,
+>  Eight,
+>  Nine,
+>  Ten,
+>  DollarSign,
+>  Percent,
+>  Caret,
+>  Ampersand
 > }
 > ```
 >
 > **Boss Battle: The Locked Door**
 >
 > ```c#
+> Console.WriteLine("Set the initial password: ");
+> int password = Convert.ToInt32(Console.ReadLine());
+> Door door = new Door(password);
+> 
+> while (true)
+> {
+> 	Console.WriteLine($"""
+> 	                   The door is {door.State}. Now what do you need?
+> 	                   (1) Open
+> 	                   (2) Close
+> 	                   (3) Lock
+> 	                   (4) Unlock
+> 	                   (5) Change Password
+> 	                   """);
+> 	int? command = Convert.ToInt32(Console.ReadLine());
+> 	switch (command)
+> 	{
+> 		case 1:
+> 			if (door.State == DoorState.Closed)
+> 			{
+> 				door.Open();
+> 			}
+> 			else
+> 			{
+> 				Console.WriteLine("Enter the password: ");
+> 				int guessedPassword = Convert.ToInt32(Console.ReadLine());
+> 				door.Unlock(guessedPassword);
+> 				if (guessedPassword != password)
+> 				{
+> 					Console.WriteLine("The password is incorrect. Cannot open the door");
+> 					door.Lock();
+> 				}
+> 			}
+> 			break;
+> 		case 2:
+> 			door.Close();
+> 			break;
+> 		case 3:
+> 			door.Lock();
+> 			break;
+> 		case 4:
+> 			Console.WriteLine("Enter the password: ");
+> 			int typedPassword = Convert.ToInt32(Console.ReadLine());
+> 			door.Unlock(typedPassword);
+> 			break;
+> 		case 5:
+> 			Console.WriteLine("Enter the current password: ");
+> 			int currentPassword = Convert.ToInt32(Console.ReadLine());
+> 			if (currentPassword == password)
+> 			{
+> 				int newPassword = Convert.ToInt32(Console.ReadLine());
+> 				door.ChangePassword(currentPassword,newPassword);
+> 			}
+> 			break;
+> 		default:
+> 			Console.WriteLine("Invalid command, please try again!");
+> 			break;
+> 	}
+> }
+> 
+> public class Door
+> {
+> 	private int _Password;
+> 	public DoorState State { get; private set; }
+> 
+> 	public Door(int password)
+> 	{
+> 		_Password = password;
+> 		State = DoorState.Closed;
+> 	}
+> 
+> 	public void Open()
+> 	{
+> 		if (State == DoorState.Closed)
+> 			State = DoorState.Open;
+> 	}
+> 
+> 	public void Close()
+> 	{
+> 		if (State == DoorState.Open)
+> 			State = DoorState.Closed;
+> 	}
+> 
+> 	public void Lock()
+> 	{
+> 		if (State == DoorState.Closed)
+> 			State = DoorState.Locked;
+> 	}
+> 
+> 	public void Unlock(int password)
+> 	{
+> 		if(password == _Password &&  State == DoorState.Locked)
+> 			State = DoorState.Closed;
+> 	}
 > 	
+> 	public void ChangePassword(int previousPassword, int newPassword)
+> 	{
+> 		if(previousPassword == _Password)
+> 		{
+> 			_Password = newPassword;
+> 			Console.WriteLine("The password has been changed.");
+> 		}
+> 		else
+> 		{
+> 			Console.WriteLine("The password is incorrect and change failed.");
+> 		}
+> 	}
+> }
+> 
+> 
+> public enum DoorState
+> {
+> 	Open,
+> 	Closed,
+> 	Locked
+> }
+> ```
+>
+> **Boss Battle: The Password Validator**
+>
+> ```c#
+> PasswordValidator PV = new PasswordValidator();
+> while (true)
+> {
+>     Console.WriteLine("Please enter a password:");
+>     string password = Console.ReadLine();
+>     if(PV.IsValid(password))
+>     {
+>         Console.WriteLine($"Password: {password}");
+>         break;
+>     }
+> }
+> 
+> public class PasswordValidator
+> {
+>     public bool IsValid(string password)
+>     {
+>         if(!CheckLength(password)) throw new ArgumentException("Password should be at least 6 characters and no more than 13 characters");
+>         if(!CheckContains(password, 'T')) throw  new ArgumentException("Password should not contain with 'T' character");
+>         if(!CheckContains(password, '&')) throw new ArgumentException("Password should not contain with '&' character");
+>         if(!HasUpper(password)) throw  new ArgumentException("Password should contain at least one uppercase letter");
+>         if(!HasLower(password)) throw new ArgumentException("Password should contain at least one lowercase letter");
+>         if(!HasDigit(password)) throw new ArgumentException("Password should contain at least one digit");
+>         return true;
+>     }
+> 
+>     private bool HasUpper(string password)
+>     {
+>         foreach (char c in password)
+>         {
+>             if (char.IsUpper(c))
+>             {
+>                 return true;
+>             }
+>         }
+> 
+>         return false;
+>     }
+> 
+>     private bool HasLower(string password)
+>     {
+>         foreach (char c in password)
+>         {
+>             if (char.IsLower(c))
+>             {
+>                 return true;
+>             }
+>         }
+> 
+>         return false;
+>     }
+> 
+>     private bool HasDigit(string password)
+>     {
+>         foreach (char c in password)
+>         {
+>             if (char.IsDigit(c))
+>             {
+>                 return true;
+>             }
+>         }
+> 
+>         return false;
+>     }
+> 
+>     private bool CheckLength(string password)
+>     {
+>         if (password.Length > 13 || password.Length < 6)
+>         {
+>             return false;
+>         }
+>         return true;
+>     }
+> 
+>     private bool CheckContains(string password, char letter)
+>     {
+>         foreach (char c in password)
+>         {
+>             if (c == letter)
+>             {
+>                 return false;
+>             }
+>         }
+> 
+>         return true;
+>     }
+> }
 > ```
 >
 > 
