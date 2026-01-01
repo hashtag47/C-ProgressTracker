@@ -854,6 +854,7 @@ Console.WriteLine(score);
 #### **• MULTI-DIMENSIONAL ARRAYS**
 
 ```c#
+// Jagged Array!
 int[][] matrix = new int[3][];
 matrix[0] = new int[] { 1, 2 };
 matrix[1] = new int[] { 3, 4 };
@@ -2743,18 +2744,18 @@ public void Update(AsteroidsGame game)
 > 
 > public class Point
 > {
->  public float X { get; init; } = 0f;
->  public float Y { get; init; } = 0f;
+> public float X { get; init; } = 0f;
+> public float Y { get; init; } = 0f;
 > 
->  public Point(float x, float y)
->  {
->      X = x;
->      Y = y;
->  }
+> public Point(float x, float y)
+> {
+>   X = x;
+>   Y = y;
+> }
 > 
->  public Point() : this(0f, 0f)
->  {
->  }
+> public Point() : this(0f, 0f)
+> {
+> }
 > }
 > ```
 >
@@ -2764,40 +2765,40 @@ public void Update(AsteroidsGame game)
 > Color c1 = new Color(128, 128, 128);
 > Color yellow = Color.Yellow;
 > Console.WriteLine($"""
->                 The first color is ({c1.Red}, {c1.Green}, {c1.Blue}))
->                 The second color is ({yellow.Red}, {yellow.Green}, {yellow.Blue})
->                 """);
+>              The first color is ({c1.Red}, {c1.Green}, {c1.Blue}))
+>              The second color is ({yellow.Red}, {yellow.Green}, {yellow.Blue})
+>              """);
 > 
 > public class Color
 > {
->  public byte Red { get; }
->  public byte Green { get; }
->  public byte Blue { get; }
+> public byte Red { get; }
+> public byte Green { get; }
+> public byte Blue { get; }
 > 
->  // public Color() : this(255, 255, 255)
->  // {
->  //     
->  // }
->  // Can use object initializer via parameterless constructor
+> // public Color() : this(255, 255, 255)
+> // {
+> //     
+> // }
+> // Can use object initializer via parameterless constructor
 > 
->  public Color(byte red, byte green, byte blue)
->  {
->      Red = red;
->      Green = green;
->      Blue = blue;
->  }
+> public Color(byte red, byte green, byte blue)
+> {
+>   Red = red;
+>   Green = green;
+>   Blue = blue;
+> }
 > 
->  public static Color White { get;  } = new Color(255, 255, 255);
+> public static Color White { get;  } = new Color(255, 255, 255);
 > 
->  public static Color Black { get; } = new Color(0, 0, 0);
+> public static Color Black { get; } = new Color(0, 0, 0);
 > 
->  // public static Color Orange = new Color { Red = 999, Green = 999, Blue = 999 };
->  public static Color _Red { get; } = new Color(255, 0, 0);
->  public static Color Orange { get; } = new Color(255, 165, 0);
->  public static Color Yellow { get; } = new Color(255, 255, 0);
->  public static Color _Green { get; } = new Color(0, 128, 0);
->  public static Color _Blue { get; } = new(0, 0, 255);
->  public static Color Purple { get; } = new Color(128, 0, 128);
+> // public static Color Orange = new Color { Red = 999, Green = 999, Blue = 999 };
+> public static Color _Red { get; } = new Color(255, 0, 0);
+> public static Color Orange { get; } = new Color(255, 165, 0);
+> public static Color Yellow { get; } = new Color(255, 255, 0);
+> public static Color _Green { get; } = new Color(0, 128, 0);
+> public static Color _Blue { get; } = new(0, 0, 255);
+> public static Color Purple { get; } = new Color(128, 0, 128);
 > }
 > 
 > // In C#, the convention is to expose data through properties, not fields 
@@ -2812,71 +2813,71 @@ public void Update(AsteroidsGame game)
 > int RankCount = 0;
 > // C# typeof() ≈ Java .class 
 > foreach (Colors color in Enum.GetValues(typeof(Colors)))
->  ColorCount++;
+> ColorCount++;
 > foreach (Ranks rank in Enum.GetValues(typeof(Ranks)))
->  RankCount++;
+> RankCount++;
 > 
 > Card[] deck = new Card[ColorCount * RankCount];
 > 
 > int index = 0;
 > foreach (Colors color in Enum.GetValues(typeof(Colors)) )
 > {
->  foreach (Ranks rank in Enum.GetValues(typeof(Ranks)))
->  {
->      deck[index++] = new Card(color, rank);
->      Console.WriteLine($"""The {color} {rank}""");
->  }
+> foreach (Ranks rank in Enum.GetValues(typeof(Ranks)))
+> {
+>   deck[index++] = new Card(color, rank);
+>   Console.WriteLine($"""The {color} {rank}""");
+> }
 > 
 > }
 > 
 > public class Card
 > {
->  // Not use parameterless constructor here, object initializer is suitable for optional fields.
->  public Colors Color { get; }
->  public Ranks Rank { get; }
+> // Not use parameterless constructor here, object initializer is suitable for optional fields.
+> public Colors Color { get; }
+> public Ranks Rank { get; }
 > 
->  public Card(Colors color, Ranks rank)
->  {
->      Color = color;
->      Rank = rank;
->  }
+> public Card(Colors color, Ranks rank)
+> {
+>   Color = color;
+>   Rank = rank;
+> }
 > 
->  public bool IsSymbol => Rank == Ranks.Ampersand ||  Rank == Ranks.Percent ||   Rank == Ranks.Caret || Rank == Ranks.DollarSign;
->  public bool IsNumber => !IsSymbol;
->  // public bool IsSymbol 
->  // { 
->  //     get 
->  //     { 
->  //         return Rank == Rank.Ampersand || Rank == Rank.Caret || ...;
->  //     }
->  // }
->  // The => syntax is just a shorter way to write a read-only property with a getter
->  // C# convention - Boolean flags are typically properties, not methods
+> public bool IsSymbol => Rank == Ranks.Ampersand ||  Rank == Ranks.Percent ||   Rank == Ranks.Caret || Rank == Ranks.DollarSign;
+> public bool IsNumber => !IsSymbol;
+> // public bool IsSymbol 
+> // { 
+> //     get 
+> //     { 
+> //         return Rank == Rank.Ampersand || Rank == Rank.Caret || ...;
+> //     }
+> // }
+> // The => syntax is just a shorter way to write a read-only property with a getter
+> // C# convention - Boolean flags are typically properties, not methods
 > }
 > 
 > public enum Colors{
->  Red ,
->  Green,
->  Blue,
->  Yellow
+> Red ,
+> Green,
+> Blue,
+> Yellow
 > }
 > 
 > public enum Ranks
 > {
->  One ,
->  Two,
->  Three,
->  Four,
->  Five,
->  Six,
->  Seven,
->  Eight,
->  Nine,
->  Ten,
->  DollarSign,
->  Percent,
->  Caret,
->  Ampersand
+> One ,
+> Two,
+> Three,
+> Four,
+> Five,
+> Six,
+> Seven,
+> Eight,
+> Nine,
+> Ten,
+> DollarSign,
+> Percent,
+> Caret,
+> Ampersand
 > }
 > ```
 >
@@ -2977,7 +2978,7 @@ public void Update(AsteroidsGame game)
 > 		if(password == _Password &&  State == DoorState.Locked)
 > 			State = DoorState.Closed;
 > 	}
-> 	
+> 
 > 	public void ChangePassword(int previousPassword, int newPassword)
 > 	{
 > 		if(previousPassword == _Password)
@@ -3007,90 +3008,362 @@ public void Update(AsteroidsGame game)
 > PasswordValidator PV = new PasswordValidator();
 > while (true)
 > {
->     Console.WriteLine("Please enter a password:");
->     string password = Console.ReadLine();
->     if(PV.IsValid(password))
->     {
->         Console.WriteLine($"Password: {password}");
->         break;
->     }
+>  Console.WriteLine("Please enter a password:");
+>  string password = Console.ReadLine();
+>  if(PV.IsValid(password))
+>  {
+>      Console.WriteLine($"Password: {password}");
+>      break;
+>  }
 > }
 > 
 > public class PasswordValidator
 > {
->     public bool IsValid(string password)
->     {
->         if(!CheckLength(password)) throw new ArgumentException("Password should be at least 6 characters and no more than 13 characters");
->         if(!CheckContains(password, 'T')) throw  new ArgumentException("Password should not contain with 'T' character");
->         if(!CheckContains(password, '&')) throw new ArgumentException("Password should not contain with '&' character");
->         if(!HasUpper(password)) throw  new ArgumentException("Password should contain at least one uppercase letter");
->         if(!HasLower(password)) throw new ArgumentException("Password should contain at least one lowercase letter");
->         if(!HasDigit(password)) throw new ArgumentException("Password should contain at least one digit");
->         return true;
->     }
+>  public bool IsValid(string password)
+>  {
+>      if(!CheckLength(password)) throw new ArgumentException("Password should be at least 6 characters and no more than 13 characters");
+>      if(!CheckContains(password, 'T')) throw  new ArgumentException("Password should not contain with 'T' character");
+>      if(!CheckContains(password, '&')) throw new ArgumentException("Password should not contain with '&' character");
+>      if(!HasUpper(password)) throw  new ArgumentException("Password should contain at least one uppercase letter");
+>      if(!HasLower(password)) throw new ArgumentException("Password should contain at least one lowercase letter");
+>      if(!HasDigit(password)) throw new ArgumentException("Password should contain at least one digit");
+>      return true;
+>  }
 > 
->     private bool HasUpper(string password)
->     {
->         foreach (char c in password)
->         {
->             if (char.IsUpper(c))
->             {
->                 return true;
->             }
->         }
+>  private bool HasUpper(string password)
+>  {
+>      foreach (char c in password)
+>      {
+>          if (char.IsUpper(c))
+>          {
+>              return true;
+>          }
+>      }
 > 
->         return false;
->     }
+>      return false;
+>  }
 > 
->     private bool HasLower(string password)
->     {
->         foreach (char c in password)
->         {
->             if (char.IsLower(c))
->             {
->                 return true;
->             }
->         }
+>  private bool HasLower(string password)
+>  {
+>      foreach (char c in password)
+>      {
+>          if (char.IsLower(c))
+>          {
+>              return true;
+>          }
+>      }
 > 
->         return false;
->     }
+>      return false;
+>  }
 > 
->     private bool HasDigit(string password)
->     {
->         foreach (char c in password)
->         {
->             if (char.IsDigit(c))
->             {
->                 return true;
->             }
->         }
+>  private bool HasDigit(string password)
+>  {
+>      foreach (char c in password)
+>      {
+>          if (char.IsDigit(c))
+>          {
+>              return true;
+>          }
+>      }
 > 
->         return false;
->     }
+>      return false;
+>  }
 > 
->     private bool CheckLength(string password)
->     {
->         if (password.Length > 13 || password.Length < 6)
->         {
->             return false;
->         }
->         return true;
->     }
+>  private bool CheckLength(string password)
+>  {
+>      if (password.Length > 13 || password.Length < 6)
+>      {
+>          return false;
+>      }
+>      return true;
+>  }
 > 
->     private bool CheckContains(string password, char letter)
->     {
->         foreach (char c in password)
->         {
->             if (c == letter)
->             {
->                 return false;
->             }
->         }
+>  private bool CheckContains(string password, char letter)
+>  {
+>      foreach (char c in password)
+>      {
+>          if (c == letter)
+>          {
+>              return false;
+>          }
+>      }
 > 
->         return true;
->     }
+>      return true;
+>  }
 > }
 > ```
 >
+> **Boss Battle: Rock-Paper-Scissors**
+>
+> ```c#
+> Game game = new Game();
+> game.GameStart();
 > 
+> public class Game
+> {
+>     public Player Player1 { get; } = new Player();
+>     public Player Player2 { get; } = new Player();
+>     
+>     private static int Round = 0;
+>     
+>     public void GameStart()
+>     {
+>         while (true)
+>         {
+>             Round++;
+>             Console.WriteLine($"""
+>                                Player 1, which action you want to take?
+>                                (1) {(Actions)1} (2) {(Actions)2} (3) {(Actions)3}
+>                                """);
+>             int play1 = Convert.ToInt32(Console.ReadLine());
+>             Player1.Action = (Actions)play1;
+>             Console.WriteLine($"""
+>                                Player 2, which action you want to take?
+>                                (1) {(Actions)1} (2) {(Actions)2} (3) {(Actions)3}
+>                                """);
+>             int play2 = Convert.ToInt32(Console.ReadLine());
+>             Player2.Action = (Actions)play2;
+>             Player1.CompareAction(Player2);
+>             Console.WriteLine($"""
+>                                Do you wish to continue? (y/n)
+>                                """);
+>             char receiver =  char.Parse(Console.ReadLine().ToLower());
+>             if(receiver == 'n')
+>             {
+>                 Console.WriteLine($"""
+>                                    Player 1 won {Player1.WinningCount}
+>                                    Player 2 won {Player2.WinningCount}
+>                                    Draws: {Round-(Player1.WinningCount + Player2.WinningCount)}
+>                                    """);
+>                 break;
+>             }
+>         }   
+>     }
+> }
+> 
+> 
+> public class Player
+> {
+>     public Actions Action { get; set; }
+>     public int WinningCount { get; set; } = 0;
+>     public void CompareAction(Player player2)
+>     {
+>         Actions playerAct1 = Action;
+>         Actions playerAct2 = player2.Action;
+> 
+>         if (playerAct1 == playerAct2)
+>         {
+>             Console.WriteLine("DRAW!");
+>             return;
+>         }
+>         if ((playerAct1 == Actions.Paper && playerAct2 == Actions.Rock) ||
+>             (playerAct1 == Actions.Scissors && playerAct2 == Actions.Paper) ||
+>             (playerAct1 == Actions.Rock && playerAct2 == Actions.Scissors))
+>         {
+>             WinningCount++;
+>             Console.WriteLine($"""
+>                                Player 1 ({playerAct1}) Beats Player 2 ({playerAct2})
+>                                """);
+>         }
+>         else
+>         {
+>             player2.WinningCount++;
+>             Console.WriteLine($"""
+>                                Player 2 ({playerAct2}) Beats Player 1 ({playerAct1})
+>                                """);
+>         }
+>     }
+> }
+> 
+> 
+> public enum Actions
+> {
+>     Rock = 1,
+>     Paper,
+>     Scissors
+> }
+> ```
+>
+> **Boss Battle: TIC-TAC-TOE**
+>
+> ```c#
+> Game game = new Game();
+> game.Start();
+> 
+> public class Game
+> {
+>     private Board board = new Board();
+>     private Player player1 = new Player(Pieces.X);
+>     private Player player2 = new Player(Pieces.O);
+>     private bool isPlayer1Turn = true;
+> 
+>     public void Start()
+>     {
+>         while (true)
+>         {
+>             Player currentPlayer = isPlayer1Turn ? player1 : player2;
+>             Console.WriteLine($"It is {currentPlayer.Piece}'s turn.");
+>             board.DisplayDeck();
+>             Console.WriteLine("What square do you want to play in? (1-9)");
+>             Process(currentPlayer);
+> 
+>             if (CheckWin(currentPlayer))
+>             {
+>                 board.DisplayDeck();
+>                 Console.WriteLine($"Player {currentPlayer.Piece} wins!");
+>                 break;
+>             }
+> 
+>             if (board.IsFinished())
+>             {
+>                 board.DisplayDeck();
+>                 Console.WriteLine("It's a draw!");
+>                 break;
+>             }
+> 
+>             isPlayer1Turn = !isPlayer1Turn;
+>         }
+>     }
+> 
+>     private void Process(Player player)
+>     {
+>         while (true)
+>         {
+>             int number = Convert.ToInt32(Console.ReadLine());
+>             bool isConfirm = board.PutPiece(player, number);
+>             if (!isConfirm)
+>             {
+>                 Console.WriteLine("That square is taken or invalid. Select another!");
+>             }
+>             else
+>             {
+>                 return;
+>             }
+>         }
+>     }
+> 
+>     private bool CheckWin(Player player)
+>     {
+>         string piece = player.Piece.ToString();
+>         string[,] deck = board.Deck;
+> 
+>         if ((deck[0,0] == piece && deck[0,1] == piece && deck[0,2] == piece) ||
+>             (deck[1,0] == piece && deck[1,1] == piece && deck[1,2] == piece) ||
+>             (deck[2,0] == piece && deck[2,1] == piece && deck[2,2] == piece))
+>         {
+>             return true;
+>         }
+> 
+>         if ((deck[0,0] == piece && deck[1,0] == piece && deck[2,0] == piece) ||
+>             (deck[0,1] == piece && deck[1,1] == piece && deck[2,1] == piece) ||
+>             (deck[0,2] == piece && deck[1,2] == piece && deck[2,2] == piece))
+>         {
+>             return true;
+>         }
+> 
+>         if ((deck[0,0] == piece && deck[1,1] == piece && deck[2,2] == piece) ||
+>             (deck[0,2] == piece && deck[1,1] == piece && deck[2,0] == piece))
+>         {
+>             return true;
+>         }
+> 
+>         return false;
+>     }
+> 
+>     public class Board
+>     {
+>         public string[,] Deck { get; }
+>         private int Move = 0;
+> 
+>         public Board()
+>         {
+>             Deck = new string[3,3];
+>             for (int i = 0; i < Deck.GetLength(0); i++)
+>             {
+>                 for (int j = 0; j < Deck.GetLength(1); j++)
+>                 {
+>                     Deck[i, j] = "•";
+>                 }
+>             }
+>         }
+> 
+>         // Print out the current pieces
+>         public void DisplayDeck()
+>         {
+>             for (int i = 0; i < Deck.GetLength(0); i++)
+>             {
+>                 for (int j = 0; j < Deck.GetLength(1); j++)
+>                 {
+>                     Console.Write(Deck[i,j] + " ");
+>                     if (j == 2)
+>                     {
+>                         Console.WriteLine();
+>                     }
+>                 }
+>                 
+>             }
+>         }
+> 
+>         // Detect whether each player takes action
+>         public bool PutPiece(Player player, int number)
+>         {
+>             if (number < 1 || number > 9)
+>             {
+>                 return false;
+>             }
+> 
+>             int row = 0;
+>             int col = 0;
+>             
+>             switch(number - 1)
+>             {
+>                 case 0 : row = 0; col = 0; break;
+>                 case 1 : row = 0; col = 1; break;
+>                 case 2 : row = 0; col = 2; break;
+>                 case 3 : row = 1; col = 0; break;
+>                 case 4 : row = 1; col = 1; break;
+>                 case 5 : row = 1; col = 2; break;
+>                 case 6 : row = 2; col = 0; break;
+>                 case 7 : row = 2; col = 1; break;
+>                 case 8 : row = 2; col = 2; break;
+>             }
+> 
+>             if (Deck[row, col] == Pieces.X.ToString() || Deck[row, col] == Pieces.O.ToString())
+>             {
+>                 return false;
+>             }
+>             Deck[row, col] = player.Piece.ToString();
+>             Move++;
+>             return true;
+>         }
+> 
+>         // Detect whether the deck is full
+>         public bool IsFinished()
+>         {
+>             return Move == Deck.Length;
+>         }
+>     }
+> 
+>     public class Player
+>     {
+>         // Decide which piece of which player will use
+>         public Pieces Piece { get; }
+> 
+>         public Player(Pieces piece)
+>         {
+>             Piece = piece;
+>         }
+>     }
+> 
+>     public enum Pieces
+>     {
+>         X,
+>         O
+>     }
+> }
+> ```
+
+
+
+------
 
