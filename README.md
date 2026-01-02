@@ -3367,3 +3367,330 @@ public void Update(AsteroidsGame game)
 
 ------
 
+### **INHERITANCE**
+
+​	class Derived : Base { ... }
+
+​	Constructors in a derived class must call out the constructor they are using from the base class unless they are using a parameterless constructor: **public Derived(int x) : base(x) { ...}**
+
+​	Derived class instances can be used where the base class is expected: **Base x = new Derived();**
+
+​	The **protected** accessibility modifier makes things accessible in the class and any derived classes.
+
+​	**Object-Oriented Principle #4: Inheritance—Basing one class on another, retaining the original class’s functionality while extending the new class with additional capabilities.**
+
+
+
+#### **• INHERITANCE AND THE OBJECT CLASS**
+
+​	The original class we build on is the **base class**, though it is sometimes called the **parent class** or the **superclass**. The new class that extends the base class is the **derived class**, though it is sometimes called the **child class** or the **subclass**.
+
+```c#
+object thing = new object();
+
+// ToString and Equals --> From Object Class
+Console.WriteLine(thing.ToString());
+
+object a = new object();
+object b = a;
+object c = new object();
+Console.WriteLine(a.Equals(b));
+Console.WriteLine(a.Equals(c));
+
+object thing = new Point(2, 4);
+// The thing variable knows it holds objects. You can use its
+// ToString and Equals method. But the variable makes no promises that it has a reference
+// to anything more specific than object:
+Console.WriteLine(thing.ToString()); // Safe.
+Console.WriteLine(thing.X); // Compiler error.
+
+```
+
+
+
+#### • CHOOSING BASE CLASSES
+
+```c#
+public class GameObject
+{
+    public float PositionX { get; set; }
+    public float PositionY { get; set; }
+    public float VelocityX { get; set; }
+    public float VelocityY { get; set; }
+    public void Update()
+    {
+        PositionX += VelocityX;
+        PositionY += VelocityY;
+    }
+}
+
+public class Asteroid : GameObject
+{
+    public float Size { get; }
+    public float RotationAngle { get; }
+}
+
+// A practical usage example because of Inheritance
+GameObject[] gameObjects = new GameObject[]
+{
+    new Asteroid(), new Asteroid(), new Asteroid(),
+    new Bullet(), new Ship()
+};
+
+foreach (GameObject item in gameObjects)
+item.Update();
+```
+
+​	A collection of classes related through **inheritance**, such as these four, is called an **inheritance hierarchy**.
+
+
+
+#### **• CONSTRUCTORS**
+
+​	A derived class inherits most members from a base class **but not constructors**.
+
+​	We can—and must—**leverage** the constructors defined in the base class when **making new constructors in the derived class**. If a **parameterless constructor** exists in the base class, a constructor in a derived class will automatically call it before running its own code.
+
+​	Suppose a **base class** **has more than one constructor or does not include a parameterless constructor** (both common scenarios). In that case, you will need to **expressly state** which base class constructor to build upon for any new constructors in the derived class.
+
+```c#
+public GameObject(float positionX, float positionY,
+		float velocityX, float velocityY)
+{
+    PositionX = positionX; PositionY = positionY;
+    VelocityX = velocityX; VelocityY = velocityY;
+}
+```
+
+Since **there is no parameterless constructor to call**, any constructors defined in Asteroid will need to specifically indicate that it is using this other constructor and supply arguments for its parameters:
+
+```c#
+public Asteroid() : base(0, 0, 0, 0)
+{
+}
+
+// Or much common
+public Asteroid(float positionX, float positionY,
+		float velocityX, float velocityY)
+		: base(positionX, positionY, velocityX, velocityY)
+{
+}
+```
+
+​	**Constructors in the derived class must call out a constructor from the base class (with base) to build upon. Alternatively, they can call out a different one in the same class (with this). If a parameterless constructor exists, including one the compiler generates, you do not need to state it explicitly with base.**
+
+
+
+#### **• CASTING AND CHECKING FOR TYPES**
+
+```c#
+GameObject gameObject = new Asteroid();
+Asteroid asteroid = gameObject; // ERROR!			
+
+GameObject gameObject = new Asteroid();
+Asteroid asteroid = (Asteroid)gameObject; // Use with caution but is guaranteed to be safe
+
+Asteroid probablyAnAsteroid = (Asteroid)CreateAGameObject();
+GameObject CreateAGameObject() { ... } // Not safe at all, might return all kinds of classes
+```
+
+Casting from a base class to a derived class is called a **downcast**.
+
+There are **three ways** to do this check.
+
+The **first way** is with **object’s GetType()** method and the **typeof** keyword:
+
+```c#
+if (gameObject.GetType() == typeof(Asteroid)) { ... }
+// These objects are instances of the Type class, which is a type that
+// has metadata about other types in your program.
+// If gameObject is an Asteroid, it will return the Type
+// object representing the Asteroid class.
+```
+
+**Another way** is through the **as** keyword:
+
+```c#
+GameObject gameObject = CreateAGameObject();
+Asteroid? asteroid = gameObject as Asteroid;
+// The as keyword simultaneously does a check and the conversion.
+```
+
+The **third way** is with the **is** keyword. The is keyword is powerful and is one way to use patterns.
+
+```c#
+if (gameObject is Asteroid asteroid)
+{
+	// You can use the `asteroid` variable here.
+}
+
+// Or this: when you don't want to use the variable but only the class
+if (gameObject is Asteroid) { ... }
+```
+
+
+
+#### **• THE PROTECTED ACCESS MODIFIER**
+
+If something is **protected**, it is accessible within the class and also any derived classes.
+
+```c#
+public class GameObject
+{
+    public float PositionX { get; protected set; }
+    public float PositionY { get; protected set; }
+    public float VelocityX { get; protected set; }
+    public float VelocityY { get; protected set; }
+}
+```
+
+
+
+#### **• SEALED CLASSES**
+
+If you want to forbid others from **deriving from a specific class**, you can prevent it by adding the **sealed modifier** to the class definition:
+
+```c#
+public sealed class Asteroid : GameObject
+{
+	// ...
+}
+// In this case, nobody will be able to derive a new class based on Asteroid.
+```
+
+> [!TIP]
+>
+> **Challenge: Packing Inventory**
+>
+> ```c#
+> Pack pc = new Pack(10, 25,45);
+> Console.WriteLine($"""
+>                    Which item you would like to put inside the pack?
+>                    (1) Arrow
+>                    (2) Bow
+>                    (3) Rope
+>                    (4) Water
+>                    (5) Food
+>                    (6) Sword
+>                    """);
+> int userChoice = Int16.Parse(Console.ReadLine());
+> InventoryItem? item;
+> item = userChoice switch
+> {
+>     1 => new Arrow(),
+>     2 => new Bow(),
+>     3 => new Rope(),
+>     4 => new Water(),
+>     5 => new Food(),
+>     6 => new Sword(),
+>     _ => throw new NotImplementedException()
+> };
+> if (pc.Add(item))
+> {
+>     Console.WriteLine($"""
+>                        Now the pack has {pc.CurrentItems} items,
+>                        weight on {pc.CurrentWeight} kg,
+>                        volumn on {pc.CurrentVolumn} L.
+>                        *** The maximum weight is {pc.MaximunWeight} kg,
+>                        *** The maximum volumn is {pc.MaximunVolumn} L.
+>                        *** The maximum item storage space is {pc.CurrentItems} pieces.
+>                        """);
+> };
+> 
+> public class Pack
+> {
+>     public int MaximumCounts { get; }
+>     public double MaximumWeight { get; }
+>     public double MaximumVolumn { get; }
+>   
+>     private InventoryItem[] _items;
+>    
+>     public int CurrentCount {get; private set;}
+>     public double CurrentWeight {get; private set;}
+>     public double CurrentVolumn {get; private set;}
+>    
+>     public Pack(int maxSize, double maximumWeight, double maximumVolumn)
+>     {
+>         _items = new InventoryItem[maxSize];
+>       	 MaximumCounts = maxSize;
+>         MaximumWeight = maximumWeight;
+>         MaximumVolumn = maximumVolumn;
+>  }
+>    
+>     public bool Add(InventoryItem item)
+>     {
+>         if(CurrentCount >= MaximumCounts) return false;
+>         if(CurrentVolumn + item.Volumn > MaxVolumn) return false;
+>         if(CurrentWeight + item.Weight > MaxWeight) return false;
+>         
+>         _items[CurrentCount] = item;
+>         CurrentCount++;
+>         CurrentWeight += item.Weight;
+>         CurrentVolumn += item.Volumn;
+>         return true;
+>  }
+>    }
+>    
+>    
+>    public class InventoryItem
+>    {
+>     public double Weight { get; }
+>     public double Volumn { get; }
+>    
+>     public InventoryItem(double weight, double volumn)
+>  {
+>         Weight = weight;
+>         Volumn = volumn;
+>     }
+>     }
+>    
+>    public class Arrow : InventoryItem
+>    {
+>     public Arrow() : base(0.1, 0.05)
+>     {
+>    
+>  }
+>    }
+>    
+>    public class Bow : InventoryItem
+>    {
+>     public Bow() : base(1, 4)
+>          {
+>     }
+>    }
+>    
+>    public class Rope : InventoryItem
+>    {
+>     public Rope() : base(1, 1.5)
+>     {
+>     }
+>    }
+> 
+>    public class Water : InventoryItem
+>    {
+>     public Water() : base(2, 3)
+>     {
+>          }
+>    }
+>    
+>    public class Food : InventoryItem
+> {
+>  public Food() : base(1, 0.5)
+>  {
+>  }
+> }
+>    
+>    public class Sword : InventoryItem
+> {
+>     public Sword() : base(5, 3)
+>     {
+>     }
+>    }
+>    ```
+> 
+
+
+
+------
+
+### **POLYMORPHISM**
